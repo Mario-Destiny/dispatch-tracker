@@ -1254,3 +1254,21 @@ html {
   font-size: 13px;
   color: #ef4444;
 }
+
+.brand-logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.brand-headline {
+  font-family: 'Pacifico', cursive;
+  font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  .brand-logo { font-size: 20px; }
+  .brand-headline { font-size: 28px !important; }
+}
