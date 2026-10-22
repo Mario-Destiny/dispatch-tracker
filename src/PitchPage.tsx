@@ -42,7 +42,7 @@ function PitchPage() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '20px 40px', borderBottom: '1px solid var(--border)',
         }}>
-          <strong style={{ fontSize: 18 }}>Dispatch Tracker</strong>
+          <span className="brand-logo"><span aria-hidden="true">🛵</span> Dispatch Tracker</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <Link to="/login" style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600 }}>
               Log In
@@ -57,7 +57,7 @@ function PitchPage() {
         </nav>
 
         <div style={{ textAlign: 'center', padding: '90px 20px 40px', maxWidth: 700, margin: '0 auto' }}>
-          <h1 style={{ fontSize: 38, color: 'var(--text)', lineHeight: 1.3, margin: '0 0 20px' }}>
+          <h1 className="brand-headline" style={{ fontSize: 38, color: 'var(--text)', lineHeight: 1.4, margin: '0 0 20px' }}>
             You sent a delivery. Now you're just... waiting.
           </h1>
           <p style={{ fontSize: 17, color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>

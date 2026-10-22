@@ -55,7 +55,7 @@ function Home() {
           padding: '20px 40px',
           borderBottom: '1px solid var(--border)',
         }}>
-          <strong style={{ fontSize: 18 }}>Dispatch Tracker</strong>
+          <span className="brand-logo"><span aria-hidden="true">🛵</span> Dispatch Tracker</span>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/login" style={{ color: 'var(--text)', marginRight: 16, textDecoration: 'none', fontWeight: 600 }}>
               Log In
