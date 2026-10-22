@@ -108,6 +108,21 @@ function getRiderState(r: Rider): RiderState {
   return 'away'
 }
 
+// Smart rider suggestion: score = completion rate x free capacity
+const MAX_ACTIVE_DELIVERIES = 5
+const MIN_HISTORY_FOR_RATE = 5
+const NEUTRAL_COMPLETION_RATE = 0.8
+const ACTIVE_STATUSES = ['pending', 'picked_up', 'in_transit']
+
+function scoreRider(r: Rider, all: Delivery[]) {
+  const mine = all.filter((d) => d.rider_id === r.id)
+  const active = mine.filter((d) => ACTIVE_STATUSES.includes(d.status)).length
+  const delivered = mine.filter((d) => d.status === 'delivered').length
+  const rate = mine.length >= MIN_HISTORY_FOR_RATE ? delivered / mine.length : NEUTRAL_COMPLETION_RATE
+  const capacity = Math.max(0, 1 - active / MAX_ACTIVE_DELIVERIES)
+  return rate * capacity
+}
+
 function durationSince(iso: string) {
   const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
   if (mins < 1) return null
@@ -484,6 +499,19 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const visibleRiders = riderRows.filter((x) => riderFilter === 'all' || x.state === riderFilter)
   const selectedRider = riders.find((r) => r.id === selectedRiderId)
 
+  // Suggest the best Online rider (Away riders only if nobody is Online)
+  const onlineRows = riderRows.filter((x) => x.state === 'online')
+  const suggestionPool = onlineRows.length > 0 ? onlineRows : riderRows.filter((x) => x.state === 'away')
+  const suggestedRider =
+    suggestionPool
+      .map((x) => ({ rider: x.rider, score: scoreRider(x.rider, deliveries) }))
+      .filter((x) => x.score > 0)
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          (b.rider.last_seen_at ?? '').localeCompare(a.rider.last_seen_at ?? '')
+      )[0]?.rider ?? null
+
   // Plan usage (only matters when a free-plan limit is switched on in siteInfo.ts)
   const thisMonthKey = monthKey(new Date())
   const usedThisMonth = countInMonth(deliveries, thisMonthKey)
@@ -593,6 +621,21 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
             ))}
           </div>
 
+          {!loadingRiders && suggestedRider && (
+            <div className="rider-suggest">
+              <span>
+                Suggested: <strong>{suggestedRider.name}</strong>
+              </span>
+              <button
+                type="button"
+                className="btn-primary btn-sm"
+                onClick={() => setSelectedRiderId(suggestedRider.id)}
+              >
+                {selectedRiderId === suggestedRider.id ? 'Selected ✓' : 'Use suggested rider'}
+              </button>
+            </div>
+          )}
+
           {loadingRiders ? (
             <div className="rider-list" aria-busy="true">
               {[0, 1, 2].map((i) => (
@@ -630,7 +673,10 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                     </div>
 
                     <div className="rider-info">
-                      <div className="rider-name">{r.name}</div>
+                      <div className="rider-name">
+                        {r.name}
+                        {suggestedRider?.id === r.id && <span className="rider-suggested">Suggested</span>}
+                      </div>
                       <div className="rider-sub">{statusText(r, state)}</div>
                     </div>
 
