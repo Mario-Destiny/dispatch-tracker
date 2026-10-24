@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import VendorView from './VendorView'
 import RiderView from './RiderView'
 import VendorSignup from './VendorSignup'
@@ -40,7 +41,7 @@ function HeroIllustration() {
   )
 }
 
-function Home() {
+export function Home() {
   const { theme, toggleTheme } = useTheme()
 
   return (
@@ -55,7 +56,7 @@ function Home() {
           padding: '20px 40px',
           borderBottom: '1px solid var(--border)',
         }}>
-          <span className="brand-logo"><span aria-hidden="true">🛵</span> Dispatch Tracker</span>
+          <span className="brand-logo"><span aria-hidden="true">🛵</span> Veritrack</span>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/login" style={{ color: 'var(--text)', marginRight: 16, textDecoration: 'none', fontWeight: 600 }}>
               Log In
@@ -137,7 +138,7 @@ function Home() {
         <div style={{ padding: '60px 40px', maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ color: 'var(--text)' }}>About This Project</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-            Dispatch Tracker was built to solve a real, everyday problem for small vendors and
+            Veritrack was built to solve a real, everyday problem for small vendors and
             informal dispatch riders across Nigeria — the lack of visibility into where a delivery
             actually is. This project is submitted under the Federal Ministry of Education's
             Student Venture Capital Grant (S-VCG) programme, supporting student-led innovation
@@ -158,7 +159,7 @@ function Home() {
           fontSize: 14,
         }}>
           <div>
-            <strong style={{ color: 'var(--text)' }}>Dispatch Tracker</strong>
+            <strong style={{ color: 'var(--text)' }}>Veritrack</strong>
                        <p>Contact: <a href={'mailto:' + CONTACT_EMAIL} style={{ color: 'var(--text-secondary)' }}>{CONTACT_EMAIL}</a></p>
           </div>
           <div style={{ display: 'flex', gap: 20 }}>
@@ -166,18 +167,42 @@ function Home() {
                       <Link to="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy Policy</Link>
             <Link to="/terms" style={{ color: 'var(--text-secondary)' }}>Terms of Service</Link>
           </div>
-          <div>© {new Date().getFullYear()} Dispatch Tracker. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} Veritrack. All rights reserved.</div>
         </footer>
       </div>
     </div>
   )
 }
 
-function App() {
+const PRIVATE_PREFIXES = ['/track', '/l/', '/vendor', '/company', '/rider', '/admin', '/login', '/signup', '/auth']
+
+// Tells search engines not to index private or personal pages, even if they run JavaScript.
+function RobotsMeta() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const isPrivate = PRIVATE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : p + '/'))
+    let tag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null
+    if (isPrivate) {
+      if (!tag) {
+        tag = document.createElement('meta')
+        tag.name = 'robots'
+        document.head.appendChild(tag)
+      }
+      tag.content = 'noindex, nofollow'
+    } else if (tag) {
+      tag.remove()
+    }
+  }, [pathname])
+  return null
+}
+
+export function AppRoutes() {
   return (
-    <BrowserRouter>
-    <ToastContainer />
-     <Routes>
+    <>
+      <RobotsMeta />
+      <ToastContainer />
+      <Routes>
+
   <Route path="/" element={<PitchPage />} />
   <Route path="/home" element={<Home />} />
                   <Route path="/vendor" element={<StatusGate><VendorView key="vendor" /></StatusGate>} />
@@ -195,7 +220,15 @@ function App() {
   <Route path="/pitch" element={<Navigate to="/" replace />} />
           <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
-</Routes>
+      </Routes>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   )
 }

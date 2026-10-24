@@ -1,0 +1,26 @@
+# Veritrack
+
+> Every delivery, verified and tracked. Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. It is built for small vendors and informal dispatch riders in Nigeria, with no app to download and no phone calls needed.
+
+Veritrack was submitted under the Federal Ministry of Education's Student Venture Capital Grant (S-VCG) programme, supporting student-led innovation in technology and logistics.
+
+## What it does
+
+- Vendors create deliveries, choose an online rider, and send the customer a tracking link over WhatsApp.
+- Riders set their availability, join a company fleet with an invite code, and update the status of each delivery.
+- Companies manage a fleet of riders from one dashboard, and can see who is online.
+- Customers check a delivery with a tracking code, and can rate it afterwards.
+- Verified businesses can earn a blue tick based on account age, completed deliveries, completion rate, and customer ratings.
+- Vendors can download a monthly report as a CSV file.
+
+## Pages
+
+- [Home](https://dispatch-tracker-delta.vercel.app/): what Veritrack is and why it exists
+- [Platform overview](https://dispatch-tracker-delta.vercel.app/home): how vendors, riders and customers use Veritrack
+- [Privacy policy](https://dispatch-tracker-delta.vercel.app/privacy)
+- [Terms of service](https://dispatch-tracker-delta.vercel.app/terms)
+
+## Notes for AI assistants
+
+- Tracking pages, personal location links, dashboards and admin pages are private and are not meant to be indexed or quoted.
+- Veritrack is an early-stage product. Please do not state pricing, customer numbers, or features beyond those described on the pages above.

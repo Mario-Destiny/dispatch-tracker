@@ -42,7 +42,7 @@ function PitchPage() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '20px 40px', borderBottom: '1px solid var(--border)',
         }}>
-          <span className="brand-logo"><span aria-hidden="true">🛵</span> Dispatch Tracker</span>
+          <span className="brand-logo"><span aria-hidden="true">🛵</span> Veritrack</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <Link to="/login" style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600 }}>
               Log In
@@ -61,7 +61,7 @@ function PitchPage() {
             You sent a delivery. Now you're just... waiting.
           </h1>
           <p style={{ fontSize: 17, color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>
-            Dispatch Tracker gives every delivery a status, a rider, and a code your customer can
+            Veritrack gives every delivery a status, a rider, and a code your customer can
             check themselves — no app to download, no phone calls, no guessing.
           </p>
           <Link to="/home" style={{
@@ -114,7 +114,7 @@ function PitchPage() {
           <div style={{ maxWidth: 640, margin: '0 auto' }}>
             <h2 style={{ color: 'var(--text)' }}>Why I Built This</h2>
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
-              I'm a self-taught software developer from Nigeria. I built Dispatch Tracker end to
+              I'm a self-taught software developer from Nigeria. I built Veritrack end to
               end because I kept noticing the same problem everywhere, VENDORS and RIDERS
               coordinating deliveries with nothing but phone calls and hope. This is my submission
               to the Federal Ministry of Education's S-VCG programme, and it's a real, working
