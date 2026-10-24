@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTheme } from './useTheme'
+import Logo from './Logo'
 import AnimatedBackground from './AnimatedBackground'
 import AppShowcase from './AppShowcase'
 
@@ -42,7 +43,7 @@ function PitchPage() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '20px 40px', borderBottom: '1px solid var(--border)',
         }}>
-          <span className="brand-logo"><span aria-hidden="true">🛵</span> Veritrack</span>
+          <Link to="/" aria-label="Veritrack home" style={{ display: 'flex', alignItems: 'center' }}><Logo size={48} /></Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <Link to="/login" style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600 }}>
               Log In

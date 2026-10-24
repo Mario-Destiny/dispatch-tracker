@@ -18,6 +18,7 @@ import Testimonials from './Testimonials'
 import PitchPage from './PitchPage'
 import AnimatedBackground from './AnimatedBackground'
 import { useTheme } from './useTheme'
+import Logo from './Logo'
 import './App.css'
 import ToastContainer from './ToastContainer'
 import Privacy from './Privacy'
@@ -56,7 +57,7 @@ export function Home() {
           padding: '20px 40px',
           borderBottom: '1px solid var(--border)',
         }}>
-          <span className="brand-logo"><span aria-hidden="true">🛵</span> Veritrack</span>
+          <Link to="/" aria-label="Veritrack home" style={{ display: 'flex', alignItems: 'center' }}><Logo size={48} /></Link>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/login" style={{ color: 'var(--text)', marginRight: 16, textDecoration: 'none', fontWeight: 600 }}>
               Log In

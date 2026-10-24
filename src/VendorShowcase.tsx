@@ -1,8 +1,8 @@
 const sampleGoods = [
-  { emoji: '👟', name: 'Sneakers & Footwear', vendor: 'Chidi\'s Kicks', price: '₦8,000 – ₦25,000' },
-  { emoji: '🍲', name: 'Homemade Meals', vendor: 'Mama Ngozi\'s Kitchen', price: '₦1,500 – ₦4,000' },
-  { emoji: '📱', name: 'Phone Accessories', vendor: 'TechHub Lagos', price: '₦2,000 – ₦15,000' },
-  { emoji: '👗', name: 'Ankara Fashion', vendor: 'Amara Styles', price: '₦5,000 – ₦20,000' },
+  { emoji: '👟', name: 'Sneakers & Footwear', vendor: 'Chidi\'s Kicks' },
+  { emoji: '🍲', name: 'Homemade Meals', vendor: 'Mama Ngozi\'s Kitchen' },
+  { emoji: '📱', name: 'Phone Accessories', vendor: 'TechHub Lagos' },
+  { emoji: '👗', name: 'Ankara Fashion', vendor: 'Amara Styles' },
 ]
 
 function VendorShowcase() {
@@ -28,7 +28,6 @@ function VendorShowcase() {
             <div style={{ fontSize: 40, marginBottom: 8 }}>{item.emoji}</div>
             <strong style={{ color: 'var(--text)' }}>{item.name}</strong>
             <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0' }}>{item.vendor}</p>
-            <p style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{item.price}</p>
           </div>
         ))}
       </div>
