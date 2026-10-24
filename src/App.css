@@ -1256,11 +1256,15 @@ html {
 }
 
 .brand-logo {
-  font-family: 'Pacifico', cursive;
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--accent);
-  white-space: nowrap;
+  display: block;
+  flex-shrink: 0;
+  --logo-a: #1b2a6b;
+  --logo-b: #19b3a6;
+}
+
+[data-theme='dark'] .brand-logo {
+  --logo-a: #8fa8ff;
+  --logo-b: #2dd4bf;
 }
 
 .brand-headline {
@@ -1269,6 +1273,5 @@ html {
 }
 
 @media (max-width: 600px) {
-  .brand-logo { font-size: 20px; }
   .brand-headline { font-size: 28px !important; }
 }
