@@ -116,7 +116,7 @@ function PitchPage() {
             <h2 style={{ color: 'var(--text)' }}>Why I Built This</h2>
             <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
               I'm a self-taught software developer from Nigeria. I built Veritrack end to
-              end because I kept noticing the same problem everywhere, VENDORS and RIDERS
+              end because I kept noticing the same problem everywhere. Vendors and riders were
               coordinating deliveries with nothing but phone calls and hope. This is my submission
               to the Federal Ministry of Education's S-VCG programme, and it's a real, working
               product, not just a pitch deck.

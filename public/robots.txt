@@ -182,4 +182,4 @@ Disallow: /login
 Disallow: /signup/
 Disallow: /auth/
 
-Sitemap: https://dispatch-tracker-delta.vercel.app/sitemap.xml
+Sitemap: https://veritrack-app.vercel.app/sitemap.xml

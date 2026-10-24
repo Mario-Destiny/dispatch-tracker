@@ -175,15 +175,17 @@ export function Home() {
   )
 }
 
-const PRIVATE_PREFIXES = ['/track', '/l/', '/vendor', '/company', '/rider', '/admin', '/login', '/signup', '/auth']
+// Only these pages may appear in search results. Everything else gets a noindex tag.
+const PUBLIC_PATHS = ['/', '/home', '/privacy', '/terms']
 
-// Tells search engines not to index private or personal pages, even if they run JavaScript.
+// Tells search engines not to index private, personal or unknown pages, even if they run JavaScript.
 function RobotsMeta() {
   const { pathname } = useLocation()
   useEffect(() => {
-    const isPrivate = PRIVATE_PREFIXES.some((p) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : p + '/'))
+    const clean = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname
+    const isPublic = PUBLIC_PATHS.includes(clean) || clean.startsWith('/b/')
     let tag = document.querySelector('meta[name="robots"]') as HTMLMetaElement | null
-    if (isPrivate) {
+    if (!isPublic) {
       if (!tag) {
         tag = document.createElement('meta')
         tag.name = 'robots'
@@ -195,6 +197,25 @@ function RobotsMeta() {
     }
   }, [pathname])
   return null
+}
+
+function NotFound() {
+  return (
+    <div className="page-bg" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 20 }}>
+      <div>
+        <h1 style={{ color: 'var(--text)' }}>Page not found</h1>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>
+          The page you're looking for doesn't exist or has moved.
+        </p>
+        <Link to="/" style={{
+          background: 'var(--accent)', color: '#fff', padding: '12px 24px',
+          borderRadius: 8, textDecoration: 'none', fontWeight: 600, display: 'inline-block',
+        }}>
+          Back to home
+        </Link>
+      </div>
+    </div>
+  )
 }
 
 export function AppRoutes() {
@@ -221,6 +242,7 @@ export function AppRoutes() {
   <Route path="/pitch" element={<Navigate to="/" replace />} />
           <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )
