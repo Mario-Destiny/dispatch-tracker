@@ -1,19 +1,12 @@
 import { useId } from 'react'
 
-// Veritrack icon: a check mark that curves into a heart. Colors follow the light/dark theme
+// Veritrack logo: a check mark that curves into a heart, with the name beside it. Colors follow the light/dark theme
 // through the --logo-a (start) and --logo-b (end) variables set in App.css.
 function Logo({ size = 40 }: { size?: number }) {
   const id = useId()
   return (
-    <svg
-      className="brand-logo"
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      role="img"
-      aria-label="Veritrack"
-    >
-      <title>Veritrack</title>
+    <span className="brand-lockup">
+      <svg className="brand-logo" width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
       <defs>
         <linearGradient id={id} x1="14" y1="14" x2="54" y2="56" gradientUnits="userSpaceOnUse">
           <stop offset="0" style={{ stopColor: 'var(--logo-a)' }} />
@@ -29,7 +22,12 @@ function Logo({ size = 40 }: { size?: number }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
+      </svg>
+      <span className="brand-name">
+        <b>Veri</b>
+        <span>track</span>
+      </span>
+    </span>
   )
 }
 

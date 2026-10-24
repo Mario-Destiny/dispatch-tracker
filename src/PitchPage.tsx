@@ -43,7 +43,7 @@ function PitchPage() {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '20px 40px', borderBottom: '1px solid var(--border)',
         }}>
-          <Link to="/" aria-label="Veritrack home" style={{ display: 'flex', alignItems: 'center' }}><Logo size={48} /></Link>
+          <Link to="/" aria-label="Veritrack home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}><Logo size={44} /></Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <Link to="/login" style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600 }}>
               Log In

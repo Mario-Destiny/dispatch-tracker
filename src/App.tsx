@@ -57,7 +57,7 @@ export function Home() {
           padding: '20px 40px',
           borderBottom: '1px solid var(--border)',
         }}>
-          <Link to="/" aria-label="Veritrack home" style={{ display: 'flex', alignItems: 'center' }}><Logo size={48} /></Link>
+          <Link to="/" aria-label="Veritrack home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}><Logo size={44} /></Link>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/login" style={{ color: 'var(--text)', marginRight: 16, textDecoration: 'none', fontWeight: 600 }}>
               Log In
