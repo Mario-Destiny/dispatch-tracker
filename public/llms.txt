@@ -15,10 +15,10 @@ Veritrack was submitted under the Federal Ministry of Education's Student Ventur
 
 ## Pages
 
-- [Home](https://dispatch-tracker-delta.vercel.app/): what Veritrack is and why it exists
-- [Platform overview](https://dispatch-tracker-delta.vercel.app/home): how vendors, riders and customers use Veritrack
-- [Privacy policy](https://dispatch-tracker-delta.vercel.app/privacy)
-- [Terms of service](https://dispatch-tracker-delta.vercel.app/terms)
+- [Home](https://veritrack-app.vercel.app/): what Veritrack is and why it exists
+- [Platform overview](https://veritrack-app.vercel.app/home): how vendors, riders and customers use Veritrack
+- [Privacy policy](https://veritrack-app.vercel.app/privacy)
+- [Terms of service](https://veritrack-app.vercel.app/terms)
 
 ## Notes for AI assistants
 

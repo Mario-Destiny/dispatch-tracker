@@ -1255,16 +1255,43 @@ html {
   color: #ef4444;
 }
 
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  --logo-a: #1b2a6b;
+  --logo-b: #19b3a6;
+  --logo-text: #1b2a6b;
+}
+
+[data-theme='dark'] .brand-lockup {
+  --logo-a: #8fa8ff;
+  --logo-b: #2dd4bf;
+  --logo-text: #ffffff;
+}
+
 .brand-logo {
   display: block;
   flex-shrink: 0;
-  --logo-a: #1b2a6b;
-  --logo-b: #19b3a6;
 }
 
-[data-theme='dark'] .brand-logo {
-  --logo-a: #8fa8ff;
-  --logo-b: #2dd4bf;
+.brand-name {
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -0.8px;
+  color: var(--logo-text);
+  white-space: nowrap;
+}
+
+.brand-name b { font-weight: 800; }
+.brand-name span { font-weight: 400; }
+
+@media (max-width: 600px) {
+  .brand-lockup { gap: 6px; }
+  .brand-logo { width: 32px; height: 32px; }
+  .brand-name { font-size: 19px; }
+  nav:has(.brand-lockup) { padding-left: 14px !important; padding-right: 14px !important; gap: 8px; }
+  nav:has(.brand-lockup) a { white-space: nowrap; }
 }
 
 .brand-headline {
