@@ -229,7 +229,7 @@ function AppShowcase() {
       <div className="mk-eyebrow">See it in action</div>
       <h2 className="mk-title">Every delivery, one clear view</h2>
       <p className="mk-sub">
-        A quick look at how vendors, riders and customers use Dispatch Tracker. Each screen below is
+        A quick look at how vendors, riders and customers use Veritrack. Each screen below is
         built from the real app.
       </p>
 

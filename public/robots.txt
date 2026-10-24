@@ -1,0 +1,185 @@
+# Veritrack
+# Public pages are open to search engines and AI crawlers.
+# Private pages (tracking, dashboards, admin, login) are blocked.
+
+User-agent: *
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: CCBot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /track
+Disallow: /l/
+Disallow: /vendor
+Disallow: /company
+Disallow: /rider
+Disallow: /admin
+Disallow: /login
+Disallow: /signup/
+Disallow: /auth/
+
+Sitemap: https://dispatch-tracker-delta.vercel.app/sitemap.xml
