@@ -145,7 +145,7 @@ function PitchPage() {
 
         <div className="lp-section">
           <h2>Simple pricing</h2>
-          <p className="lp-sub">Tracking is free. Pay only if you want the blue verification tick.</p>
+          <p className="lp-sub">Tracking is free. Pay only if you want the blue verification tick. Payments are secure, by Paystack.</p>
           <div className="lp-steps">
             <div className="lp-who">
               <strong>Free</strong>
@@ -157,13 +157,13 @@ function PitchPage() {
               <strong>{PRICING.vendor.name}</strong>
               <p className="lp-price">{PRICING.vendor.price} <small>{PRICING.vendor.per}</small></p>
               <p>A blue tick on your public page so customers trust you. We check your details first.</p>
-              <a href={'mailto:' + CONTACT_EMAIL + '?subject=Verified%20Vendor%20plan'}>Contact us to subscribe →</a>
+              <Link to="/signup/vendor">Sign up, then pay online →</Link>
             </div>
             <div className="lp-who">
               <strong>{PRICING.company.name}</strong>
               <p className="lp-price">{PRICING.company.price} <small>{PRICING.company.per}</small></p>
               <p>For dispatch companies with a fleet: the tick, plus your company page.</p>
-              <a href={'mailto:' + CONTACT_EMAIL + '?subject=Verified%20Company%20plan'}>Contact us to subscribe →</a>
+              <Link to="/signup/company">Register, then pay online →</Link>
             </div>
           </div>
           <p className="lp-sub" style={{ marginTop: 20, marginBottom: 0, fontSize: 14 }}>
