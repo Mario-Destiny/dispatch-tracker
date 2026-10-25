@@ -4,6 +4,7 @@ import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import Skeleton from './Skeleton'
 import VerifiedTick from './VerifiedTick'
+import { PRICING } from './pricing'
 import { CONTACT_EMAIL } from './siteInfo'
 import { shortDate, tickTitle, type Badges } from './businessUtils'
 import { showToast } from './toast'
@@ -266,7 +267,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
           </p>
         ) : (
           <p className="rider-hint" style={{ marginBottom: 14 }}>
-            Earn the blue tick free by reaching the targets below, or get verified now with a Verified plan.
+            Earn the blue tick free by reaching the targets below, or get verified now with a Verified plan: {PRICING.vendor.price} a month for vendors, {PRICING.company.price} a month for companies.
             We check your details first either way.
           </p>
         )}
@@ -355,7 +356,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
           )}
           {!b.tick && (
             <a className="rider-btn" href={'mailto:' + CONTACT_EMAIL + '?subject=Verified%20plan'}>
-              Ask about a Verified plan
+              Get a Verified plan
             </a>
           )}
         </div>
