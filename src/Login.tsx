@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
+import SocialButtons from './SocialButtons'
 import { CONTACT_EMAIL } from './siteInfo'
 
 function Login() {
@@ -67,6 +68,11 @@ function Login() {
       <div className="auth-wrap">
         <h1 className="auth-title">Log In</h1>
         <p className="auth-sub">Welcome back. Sign in to your dashboard.</p>
+
+        <div className="form-card" style={{ marginBottom: 16 }}>
+          <SocialButtons />
+          <div className="auth-divider">or log in with email</div>
+        </div>
 
         <form onSubmit={handleLogin} className="form-card">
           <div className="field">

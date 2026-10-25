@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import Avatar from './Avatar'
+import { useMyAvatar } from './useMyAvatar'
 import { supabase } from './supabaseClient'
 import StatusBadge from './StatusBadge'
 import Spinner from './Spinner'
@@ -50,6 +52,7 @@ function RiderView() {
   const navigate = useNavigate()
   const [userId, setUserId] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
+  const myAvatar = useMyAvatar(name)
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [deliveries, setDeliveries] = useState<Delivery[]>([])
   const [loadingDeliveries, setLoadingDeliveries] = useState(true)
@@ -285,7 +288,12 @@ function RiderView() {
             <Greeting name={name} />
             <h1 style={{ color: 'var(--text)', marginTop: 4 }}>Rider Dashboard</h1>
           </div>
-          <button onClick={handleLogout}>Log Out</button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <Link to="/settings" className="header-avatar-link" aria-label="Settings" title="Settings">
+              <Avatar url={myAvatar} name={name} size={36} />
+            </Link>
+            <button onClick={handleLogout}>Log Out</button>
+          </div>
         </div>
 
         <div className={'status-card fade-in-card ' + (isAvailable ? 'stat-green' : '')}>
