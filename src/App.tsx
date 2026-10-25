@@ -16,7 +16,6 @@ import Settings from './Settings'
 import CustomerPin from './CustomerPin'
 import VendorShowcase from './VendorShowcase'
 import RiderShowcase from './RiderShowcase'
-import Testimonials from './Testimonials'
 import PitchPage from './PitchPage'
 import AnimatedBackground from './AnimatedBackground'
 import { useTheme } from './useTheme'
@@ -135,17 +134,14 @@ export function Home() {
 
         <VendorShowcase />
         <RiderShowcase />
-        <Testimonials />
 
         {/* About */}
         <div style={{ padding: '60px 40px', maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ color: 'var(--text)' }}>About This Project</h2>
+          <h2 style={{ color: 'var(--text)' }}>About Veritrack</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
             Veritrack was built to solve a real, everyday problem for small vendors and
-            informal dispatch riders across Nigeria — the lack of visibility into where a delivery
-            actually is. This project is submitted under the Federal Ministry of Education's
-            Student Venture Capital Grant (S-VCG) programme, supporting student-led innovation
-            in Technology and Logistics under the STEMM initiative.
+            informal dispatch riders across Nigeria: the lack of visibility into where a delivery
+            actually is. Every delivery gets a status, a rider, and a tracking code the customer can check.
           </p>
         </div>
 

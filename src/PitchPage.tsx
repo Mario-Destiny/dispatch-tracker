@@ -3,6 +3,8 @@ import { useTheme } from './useTheme'
 import Logo from './Logo'
 import AnimatedBackground from './AnimatedBackground'
 import AppShowcase from './AppShowcase'
+import DeliveryMapDemo from './DeliveryMapDemo'
+import { CONTACT_EMAIL, SITE_NAME } from './siteInfo'
 
 function IconIllustration({ type }: { type: 'pin' | 'clock' | 'tag' }) {
   const common = { fill: 'none', stroke: 'var(--accent)', strokeWidth: 2.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
@@ -65,23 +67,30 @@ function PitchPage() {
             Veritrack gives every delivery a status, a rider, and a code your customer can
             check themselves — no app to download, no phone calls, no guessing.
           </p>
-          <Link to="/home" style={{
-            background: 'var(--accent)', color: '#fff', padding: '14px 28px',
-            borderRadius: 8, textDecoration: 'none', fontWeight: 600, display: 'inline-block',
-          }}>
-            See the Platform →
-          </Link>
+          <div className="lp-cta-row">
+            <Link to="/signup/vendor" className="lp-btn lp-btn-primary">Get started free</Link>
+            <Link to="/login" className="lp-btn lp-btn-ghost">Log in</Link>
+          </div>
+          <p style={{ marginTop: 16, fontSize: 14 }}>
+            <Link to="/home" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+              Or take a look around the platform →
+            </Link>
+          </p>
         </div>
 
-        <div style={{
-          backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border)',
-          borderBottom: '1px solid var(--border)', padding: '18px 20px', textAlign: 'center',
-          fontSize: 14, color: 'var(--text-secondary)',
-        }}>
-          Built for the Federal Ministry of Education's <strong style={{ color: 'var(--text)' }}>Student Venture Capital Grant (S-VCG)</strong> Programme &nbsp;•&nbsp; A live, working product — not a concept
+        <div className="lp-proof">
+          <span>Free to start</span>
+          <span>Works on any phone</span>
+          <span>Customers need no app</span>
         </div>
 
-        <div style={{ maxWidth: 640, margin: '0 auto', padding: '60px 20px 40px' }}>
+        <div className="lp-section">
+          <h2>Know where every delivery stands</h2>
+          <p className="lp-sub">Pinned drop-off, clear status, one tracking code.</p>
+          <DeliveryMapDemo />
+        </div>
+
+        <div style={{ maxWidth: 640, margin: '0 auto', padding: '20px 20px 40px' }}>
           <h2 style={{ color: 'var(--text)' }}>The Problem</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
             Across Nigeria, small vendors and informal dispatch riders coordinate deliveries almost
@@ -91,7 +100,7 @@ function PitchPage() {
           </p>
         </div>
 
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px 20px 60px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px 20px 40px' }}>
           <h2 style={{ color: 'var(--text)', textAlign: 'center' }}>The Fix</h2>
           <div style={{
             display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -111,30 +120,57 @@ function PitchPage() {
           </div>
         </div>
 
-        <div style={{ backgroundColor: 'var(--bg-secondary)', padding: '60px 20px' }}>
-          <div style={{ maxWidth: 640, margin: '0 auto' }}>
-            <h2 style={{ color: 'var(--text)' }}>Why I Built This</h2>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
-              I'm a self-taught software developer from Nigeria. I built Veritrack end to
-              end because I kept noticing the same problem everywhere. Vendors and riders were
-              coordinating deliveries with nothing but phone calls and hope. This is my submission
-              to the Federal Ministry of Education's S-VCG programme, and it's a real, working
-              product, not just a pitch deck.
-            </p>
-            <AppShowcase />
-            <p style={{ color: 'var(--text)', fontWeight: 600, marginTop: 16 }}>— Bright Dimkpa</p>
+        <div className="lp-section">
+          <h2>How it works</h2>
+          <p className="lp-sub">Three steps, no training needed.</p>
+          <div className="lp-steps">
+            <div className="lp-step"><b>1</b><strong>Create the delivery</strong><p>The vendor adds the item, pickup and drop-off, and gets a tracking code.</p></div>
+            <div className="lp-step"><b>2</b><strong>The rider takes it</strong><p>The rider sees the job, navigates to the pinned spots, and updates the status as they go.</p></div>
+            <div className="lp-step"><b>3</b><strong>The customer follows along</strong><p>They enter the code on the tracking page. No account, no app, no phone call.</p></div>
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', padding: '70px 20px' }}>
-          <h2 style={{ color: 'var(--text)' }}>Ready to see it in action?</h2>
-          <Link to="/home" style={{
-            background: 'var(--accent)', color: '#fff', padding: '14px 28px',
-            borderRadius: 8, textDecoration: 'none', fontWeight: 600, display: 'inline-block', marginTop: 12,
-          }}>
-            Enter the Platform →
-          </Link>
+        <div style={{ backgroundColor: 'var(--bg-secondary)' }}>
+          <div className="lp-section">
+            <h2>Who it's for</h2>
+            <p className="lp-sub">Pick the one that sounds like you.</p>
+            <div className="lp-steps">
+              <div className="lp-who"><strong>Vendors</strong><p>Send orders out and stop answering "where is my package?" all day.</p><Link to="/signup/vendor">Sign up as a vendor →</Link></div>
+              <div className="lp-who"><strong>Riders</strong><p>See your jobs clearly, navigate to each pin, and build a record of deliveries done.</p><Link to="/signup/rider">Sign up as a rider →</Link></div>
+              <div className="lp-who"><strong>Delivery companies</strong><p>Manage your fleet and every rider's deliveries from one dashboard.</p><Link to="/signup/company">Register your company →</Link></div>
+            </div>
+          </div>
         </div>
+
+        <div style={{ maxWidth: 640, margin: '0 auto', padding: '60px 20px' }}>
+          <h2 style={{ color: 'var(--text)' }}>Why I built Veritrack</h2>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
+            I'm Bright, a self-taught software developer from Nigeria. I kept seeing the same thing
+            everywhere: vendors and riders coordinating deliveries with nothing but phone calls and
+            hope. So I built Veritrack end to end, to give every delivery a clear status and every
+            customer a way to check it themselves.
+          </p>
+          <AppShowcase />
+          <p style={{ color: 'var(--text)', fontWeight: 600, marginTop: 16 }}>— Bright Dimkpa</p>
+        </div>
+
+        <div style={{ textAlign: 'center', padding: '30px 20px 70px' }}>
+          <h2 style={{ color: 'var(--text)' }}>Ready to stop chasing deliveries?</h2>
+          <div className="lp-cta-row" style={{ marginTop: 16 }}>
+            <Link to="/signup/vendor" className="lp-btn lp-btn-primary">Get started free</Link>
+            <Link to="/login" className="lp-btn lp-btn-ghost">Log in</Link>
+          </div>
+        </div>
+
+        <footer className="lp-footer">
+          <nav aria-label="Footer">
+            <a href={'mailto:' + CONTACT_EMAIL}>Contact</a>
+            <Link to="/terms">Terms</Link>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/track">Track a delivery</Link>
+          </nav>
+          <div>© {new Date().getFullYear()} {SITE_NAME}. Made in Nigeria.</div>
+        </footer>
       </div>
     </div>
   )

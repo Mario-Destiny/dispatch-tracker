@@ -2,7 +2,7 @@
 
 Every delivery, verified and tracked.
 
-Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. It is built for small vendors and informal dispatch riders in Nigeria, and was submitted under the Federal Ministry of Education's Student Venture Capital Grant (S-VCG) programme.
+Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. It is built for small vendors and informal dispatch riders in Nigeria.
 
 ## What it does
 

@@ -1,16 +1,16 @@
 const sampleGoods = [
-  { emoji: '👟', name: 'Sneakers & Footwear', vendor: 'Chidi\'s Kicks' },
-  { emoji: '🍲', name: 'Homemade Meals', vendor: 'Mama Ngozi\'s Kitchen' },
-  { emoji: '📱', name: 'Phone Accessories', vendor: 'TechHub Lagos' },
-  { emoji: '👗', name: 'Ankara Fashion', vendor: 'Amara Styles' },
+  { emoji: '👟', name: 'Sneakers & Footwear', vendor: 'Footwear seller' },
+  { emoji: '🍲', name: 'Homemade Meals', vendor: 'Food vendor' },
+  { emoji: '📱', name: 'Phone Accessories', vendor: 'Gadget shop' },
+  { emoji: '👗', name: 'Ankara Fashion', vendor: 'Fashion boutique' },
 ]
 
 function VendorShowcase() {
   return (
     <div style={{ padding: '60px 20px', maxWidth: 1000, margin: '0 auto' }}>
-      <h2 style={{ textAlign: 'center', color: 'var(--text)' }}>Goods From Real Vendors</h2>
+      <h2 style={{ textAlign: 'center', color: 'var(--text)' }}>Deliveries for every kind of vendor</h2>
       <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: 32 }}>
-        A sample of what vendors on the platform can list and have delivered
+        Examples of what vendors can send out and track. These are illustrations, not real shops.
       </p>
       <div style={{
         display: 'grid',
