@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
@@ -6,6 +6,11 @@ import Skeleton from './Skeleton'
 import VerifiedTick from './VerifiedTick'
 import { tickTitle } from './businessUtils'
 import { showToast } from './toast'
+import type { LatLng } from './LiveMap'
+
+const LiveMap = lazy(() => import('./LiveMap'))
+
+type LiveInfo = { rider_lat: number | null; rider_lng: number | null; updated_at: string | null; dropoff_lat: number | null; dropoff_lng: number | null }
 
 type Delivery = {
   item_name: string
@@ -39,6 +44,27 @@ function TrackPage() {
   const [stars, setStars] = useState(0)
   const [comment, setComment] = useState('')
   const [rating, setRating] = useState(false)
+  const [live, setLive] = useState<LiveInfo | null>(null)
+
+  const trackingCode = delivery?.tracking_code
+  const inTransit = delivery?.status === 'in_transit'
+  useEffect(() => {
+    if (!trackingCode || !inTransit) {
+      setLive(null)
+      return
+    }
+    let stopped = false
+    async function poll() {
+      const { data } = await supabase.rpc('track_location', { p_code: trackingCode })
+      if (!stopped) setLive((data as LiveInfo | null) ?? null)
+    }
+    poll()
+    const timer = window.setInterval(poll, 6000)
+    return () => {
+      stopped = true
+      window.clearInterval(timer)
+    }
+  }, [trackingCode, inTransit])
 
   async function runTrack(trackingCode: string) {
     setLoading(true)
@@ -209,6 +235,22 @@ function TrackPage() {
                 </div>
               ))}
             </div>
+
+            {delivery.status === 'in_transit' && live && (live.rider_lat != null || live.dropoff_lat != null) && (
+              <div style={{ marginTop: 26 }}>
+                <Suspense fallback={<Skeleton width="100%" height={280} radius={14} />}>
+                  <LiveMap
+                    dropoff={live.dropoff_lat != null && live.dropoff_lng != null ? ({ lat: live.dropoff_lat, lng: live.dropoff_lng } as LatLng) : null}
+                    rider={live.rider_lat != null && live.rider_lng != null ? ({ lat: live.rider_lat, lng: live.rider_lng } as LatLng) : null}
+                  />
+                </Suspense>
+                <p className="live-note">
+                  {live.rider_lat != null
+                    ? 'Blue dot: your rider. Red dot: your drop-off point. Updates every few seconds.'
+                    : 'Red dot: your drop-off point. Waiting for your rider to share their location.'}
+                </p>
+              </div>
+            )}
 
             {delivery.status === 'in_transit' && delivery.confirmation_code && (
               <div style={{

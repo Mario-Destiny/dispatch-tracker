@@ -6,6 +6,7 @@ import { useTheme } from './useTheme'
 import { showToast } from './toast'
 import ReportsTab from './AdminReports'
 import SecurityTab from './AdminSecurity'
+import AdminPayments from './AdminPayments'
 import MfaChallenge from './MfaChallenge'
 
 type Tab =
@@ -1439,7 +1440,12 @@ function AdminPage() {
           {tab === 'overview' && <OverviewTab go={setTab} />}
           {tab === 'users' && <UsersTab key={seed.n} initialSearch={seed.search} />}
           {tab === 'companies' && <CompaniesTab onOpenUser={openUser} />}
-          {tab === 'verification' && <VerificationTab />}
+          {tab === 'verification' && (
+            <>
+              <VerificationTab />
+              <AdminPayments />
+            </>
+          )}
           {tab === 'businesses' && <BusinessesTab />}
           {tab === 'deliveries' && <DeliveriesTab />}
           {tab === 'ratings' && <RatingsTab />}

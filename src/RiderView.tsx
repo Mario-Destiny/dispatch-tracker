@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import Avatar from './Avatar'
 import { useMyAvatar } from './useMyAvatar'
+import { useShareLocation } from './useShareLocation'
 import { supabase } from './supabaseClient'
 import StatusBadge from './StatusBadge'
 import Spinner from './Spinner'
@@ -55,6 +56,7 @@ function RiderView() {
   const myAvatar = useMyAvatar(name)
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [deliveries, setDeliveries] = useState<Delivery[]>([])
+  const shareState = useShareLocation(deliveries.filter((d) => d.status === 'in_transit').map((d) => d.id))
   const [loadingDeliveries, setLoadingDeliveries] = useState(true)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [codeInputs, setCodeInputs] = useState<Record<string, string>>({})
@@ -295,6 +297,19 @@ function RiderView() {
             <button onClick={handleLogout}>Log Out</button>
           </div>
         </div>
+
+        {shareState !== 'idle' && (
+          <div className={'share-banner ' + (shareState === 'sharing' ? 'ok' : shareState === 'asking' ? '' : 'bad')} role="status">
+            <span aria-hidden="true">📍</span>
+            <span>
+              {shareState === 'sharing' && 'Sharing your live location with the customer and vendor. Keep this page open and your screen on.'}
+              {shareState === 'asking' && 'Please tap Allow so we can share your live location for this delivery.'}
+              {shareState === 'denied' && 'Location is blocked. Allow location for this site in your browser settings so customers can see you on the map.'}
+              {shareState === 'unsupported' && 'This phone or browser cannot share a live location.'}
+              {shareState === 'error' && 'Could not send your location just now. Check your network and location settings.'}
+            </span>
+          </div>
+        )}
 
         <div className={'status-card fade-in-card ' + (isAvailable ? 'stat-green' : '')}>
           <div>

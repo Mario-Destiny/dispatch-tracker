@@ -6,6 +6,7 @@ import { useTheme } from './useTheme'
 import Avatar from './Avatar'
 import { useMyAvatar } from './useMyAvatar'
 import StatusBadge from './StatusBadge'
+import WatchLive from './WatchLive'
 import Spinner from './Spinner'
 import Skeleton from './Skeleton'
 import BusinessPanel from './BusinessPanel'
@@ -1031,6 +1032,10 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                   Share on WhatsApp
                 </a>
               </div>
+
+              {d.status === 'in_transit' && (
+                <WatchLive deliveryId={d.id} dropLat={d.dropoff_lat} dropLng={d.dropoff_lng} />
+              )}
             </div>
           )
         })}

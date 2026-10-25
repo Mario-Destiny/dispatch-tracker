@@ -4,6 +4,8 @@ import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import Skeleton from './Skeleton'
 import VerifiedTick from './VerifiedTick'
+import { PRICING } from './pricing'
+import PayPlan from './PayPlan'
 import { CONTACT_EMAIL } from './siteInfo'
 import { shortDate, tickTitle, type Badges } from './businessUtils'
 import { showToast } from './toast'
@@ -266,7 +268,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
           </p>
         ) : (
           <p className="rider-hint" style={{ marginBottom: 14 }}>
-            Earn the blue tick free by reaching the targets below, or get verified now with a Verified plan.
+            Earn the blue tick free by reaching the targets below, or get verified now with a Verified plan: {PRICING.vendor.price} a month for vendors, {PRICING.company.price} a month for companies.
             We check your details first either way.
           </p>
         )}
@@ -353,12 +355,14 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
           {!biz.verified && biz.requested_at && (
             <span className="verified-badge pending">Application under review</span>
           )}
-          {!b.tick && (
-            <a className="rider-btn" href={'mailto:' + CONTACT_EMAIL + '?subject=Verified%20plan'}>
-              Ask about a Verified plan
-            </a>
-          )}
         </div>
+
+        {!b.tick && (biz.verified || biz.requested_at) && <PayPlan kind={biz.kind} onPaid={load} />}
+        {!b.tick && !biz.verified && !biz.requested_at && (
+          <p className="rider-hint" style={{ marginTop: 10 }}>
+            Apply for verification first. After you apply, you can pay for a Verified plan here.
+          </p>
+        )}
 
         <p className="rider-hint" style={{ marginTop: 14 }}>
           {b.top_rated

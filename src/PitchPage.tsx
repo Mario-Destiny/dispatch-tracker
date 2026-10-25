@@ -5,6 +5,7 @@ import AnimatedBackground from './AnimatedBackground'
 import AppShowcase from './AppShowcase'
 import DeliveryMapDemo from './DeliveryMapDemo'
 import { CONTACT_EMAIL, SITE_NAME } from './siteInfo'
+import { PRICING } from './pricing'
 
 function IconIllustration({ type }: { type: 'pin' | 'clock' | 'tag' }) {
   const common = { fill: 'none', stroke: 'var(--accent)', strokeWidth: 2.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
@@ -140,6 +141,34 @@ function PitchPage() {
               <div className="lp-who"><strong>Delivery companies</strong><p>Manage your fleet and every rider's deliveries from one dashboard.</p><Link to="/signup/company">Register your company →</Link></div>
             </div>
           </div>
+        </div>
+
+        <div className="lp-section">
+          <h2>Simple pricing</h2>
+          <p className="lp-sub">Tracking is free. Pay only if you want the blue verification tick. Payments are secure, by Paystack.</p>
+          <div className="lp-steps">
+            <div className="lp-who">
+              <strong>Free</strong>
+              <p className="lp-price">₦0</p>
+              <p>Create deliveries, assign riders, share tracking codes and follow every delivery.</p>
+              <Link to="/signup/vendor">Start free →</Link>
+            </div>
+            <div className="lp-who lp-featured">
+              <strong>{PRICING.vendor.name}</strong>
+              <p className="lp-price">{PRICING.vendor.price} <small>{PRICING.vendor.per}</small></p>
+              <p>A blue tick on your public page so customers trust you. We check your details first.</p>
+              <Link to="/signup/vendor">Sign up, then pay online →</Link>
+            </div>
+            <div className="lp-who">
+              <strong>{PRICING.company.name}</strong>
+              <p className="lp-price">{PRICING.company.price} <small>{PRICING.company.per}</small></p>
+              <p>For dispatch companies with a fleet: the tick, plus your company page.</p>
+              <Link to="/signup/company">Register, then pay online →</Link>
+            </div>
+          </div>
+          <p className="lp-sub" style={{ marginTop: 20, marginBottom: 0, fontSize: 14 }}>
+            Early businesses get the first {PRICING.foundingMonths} months of verification free. You can also earn the tick for free by building a good delivery record.
+          </p>
         </div>
 
         <div style={{ maxWidth: 640, margin: '0 auto', padding: '60px 20px' }}>
