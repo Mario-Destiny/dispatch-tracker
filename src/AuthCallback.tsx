@@ -1,8 +1,20 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
+import { dashboardFor, needsCompletion } from './authFlow'
+
+// The session can take a moment to appear after Google or Apple sends the person back.
+async function waitForSession(): Promise<Session | null> {
+  for (let i = 0; i < 8; i++) {
+    const { data } = await supabase.auth.getSession()
+    if (data.session) return data.session
+    await new Promise((r) => setTimeout(r, 400))
+  }
+  return null
+}
 
 function AuthCallback() {
   const navigate = useNavigate()
@@ -15,29 +27,35 @@ function AuthCallback() {
     hasRun.current = true
 
     async function finishSignIn() {
-      // 1. Did Google or Supabase send back an error?
+      // 1. Did the sign-in provider or Supabase send back an error?
       const hashParams = new URLSearchParams(window.location.hash.replace('#', ''))
       const oauthError = searchParams.get('error_description') || hashParams.get('error_description')
       if (oauthError) {
-        showToast('Google sign-in failed: ' + oauthError, 'error')
+        showToast('Sign-in failed: ' + oauthError, 'error')
         navigate('/login', { replace: true })
         return
       }
 
-      // 2. Get the session created by the Google sign-in
-      const { data: sessionData } = await supabase.auth.getSession()
-      const user = sessionData.session?.user
-
+      // 2. Get the session created by the sign-in
+      const session = await waitForSession()
+      const user = session?.user
       if (!user) {
         showToast('Sign-in could not be completed. Please try again.', 'error')
         navigate('/login', { replace: true })
         return
       }
 
-      // 3. Existing account? Send them straight to the dashboard for their role
-      const { data: existing, error: lookupError } = await supabase
+      // 3. Admins go to the admin area
+      const { data: adminFlag } = await supabase.rpc('is_admin')
+      if (adminFlag === true) {
+        navigate('/admin', { replace: true })
+        return
+      }
+
+      // 4. Look up their profile
+      const { data: profile, error: lookupError } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, phone')
         .eq('id', user.id)
         .maybeSingle()
 
@@ -47,41 +65,16 @@ function AuthCallback() {
         return
       }
 
-      if (existing) {
-        navigate(existing.role === 'rider' ? '/rider' : existing.role === 'company' ? '/company' : '/vendor', { replace: true })
+      // 5. Complete accounts go straight to their dashboard
+      if (profile && !needsCompletion(user, profile)) {
+        navigate(dashboardFor(profile.role), { replace: true })
         return
       }
 
-      // 4. New Google user: create a profile using the role picked on the signup page
+      // 6. New accounts, or accounts missing a phone number or agreement, finish their profile first.
+      //    The profile is only created there, after they agree to the terms.
       const role = searchParams.get('role')
-      if (role !== 'vendor' && role !== 'rider') {
-        showToast('Please choose whether you are signing up as a vendor or a rider.', 'error')
-        await supabase.auth.signOut()
-        navigate('/', { replace: true })
-        return
-      }
-
-      const name =
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        (user.email ? user.email.split('@')[0] : 'New user')
-
-      const { error: insertError } = await supabase.from('profiles').insert({
-        id: user.id,
-        name,
-        phone: '',
-        role,
-      })
-
-      if (insertError) {
-        showToast('Profile creation failed: ' + insertError.message, 'error')
-        await supabase.auth.signOut()
-        navigate('/login', { replace: true })
-        return
-      }
-
-      showToast('Welcome! Your account is ready.')
-      navigate(role === 'rider' ? '/rider' : '/vendor', { replace: true })
+      navigate('/complete-profile' + (role === 'vendor' || role === 'rider' ? '?role=' + role : ''), { replace: true })
     }
 
     finishSignIn()

@@ -5,6 +5,7 @@ import RiderView from './RiderView'
 import VendorSignup from './VendorSignup'
 import RiderSignup from './RiderSignup'
 import AuthCallback from './AuthCallback'
+import CompleteProfile from './CompleteProfile'
 import TrackPage from './TrackPage'
 import Login from './Login'
 import CompanySignup from './CompanySignup'
@@ -237,6 +238,7 @@ export function AppRoutes() {
                           <Route path="/admin" element={<AdminPage />} />
                                   <Route path="/l/:token" element={<CustomerPin />} />
   <Route path="/auth/callback" element={<AuthCallback />} />
+  <Route path="/complete-profile" element={<CompleteProfile />} />
   <Route path="/track" element={<TrackPage />} />
   <Route path="/login" element={<Login />} />
   <Route path="/pitch" element={<Navigate to="/" replace />} />

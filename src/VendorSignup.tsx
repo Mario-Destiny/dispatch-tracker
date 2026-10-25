@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
+import SocialButtons from './SocialButtons'
 
 function VendorSignup() {
   const navigate = useNavigate()
@@ -11,7 +12,6 @@ function VendorSignup() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
-  const [googleLoading, setGoogleLoading] = useState(false)
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
@@ -48,20 +48,6 @@ function VendorSignup() {
     navigate('/vendor')
   }
 
-  async function handleGoogleSignup() {
-    setGoogleLoading(true)
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?role=vendor`,
-      },
-    })
-    if (error) {
-      showToast('Google sign-up failed: ' + error.message, 'error')
-      setGoogleLoading(false)
-    }
-  }
-
   return (
     <div className="page-bg">
       <div className="auth-wrap">
@@ -69,14 +55,7 @@ function VendorSignup() {
         <p className="auth-sub">Create your account and start tracking deliveries.</p>
 
         <div className="form-card">
-          <button
-            type="button"
-            className="btn-google"
-            onClick={handleGoogleSignup}
-            disabled={googleLoading}
-          >
-            {googleLoading ? <><Spinner size="sm" /> Redirecting...</> : 'Continue with Google'}
-          </button>
+          <SocialButtons role="vendor" />
 
           <div className="auth-divider">or</div>
 

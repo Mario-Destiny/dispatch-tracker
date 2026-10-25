@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { CONTACT_EMAIL } from './siteInfo'
+import { needsCompletion } from './authFlow'
 
 type AccountStatus = {
   status: 'active' | 'restricted' | 'suspended'
@@ -25,13 +26,22 @@ function StatusGate({ children }: { children: ReactNode }) {
     async function load() {
       const { data: u } = await supabase.auth.getUser()
       if (u.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('phone')
+          .eq('id', u.user.id)
+          .maybeSingle()
+        if (needsCompletion(u.user, profile)) {
+          navigate('/complete-profile', { replace: true })
+          return
+        }
         const { data } = await supabase.rpc('my_account_status')
         setInfo((data as AccountStatus | null) ?? null)
       }
       setLoading(false)
     }
     load()
-  }, [])
+  }, [navigate])
 
   async function logout() {
     await supabase.auth.signOut()

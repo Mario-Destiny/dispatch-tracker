@@ -1302,3 +1302,93 @@ html {
 @media (max-width: 600px) {
   .brand-headline { font-size: 28px !important; }
 }
+
+
+/* ===== Google and Apple sign-in ===== */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-apple {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #000000;
+  border: 1px solid #000000;
+  border-radius: 10px;
+}
+
+[data-theme='dark'] .btn-apple {
+  color: #000000;
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.btn-apple:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ===== Complete profile ===== */
+.role-choice-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.role-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px;
+  text-align: left;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.role-choice strong {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.role-choice.on {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.check-row input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.field-error {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #ef4444;
+}
