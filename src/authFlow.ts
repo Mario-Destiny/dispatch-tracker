@@ -1,15 +1,15 @@
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabaseClient'
 
-export type Provider = 'google' | 'apple'
+export type Provider = 'google' | 'facebook'
 
-export const providerLabel: Record<Provider, string> = { google: 'Google', apple: 'Apple' }
+export const providerLabel: Record<Provider, string> = { google: 'Google', facebook: 'Facebook' }
 
 export function dashboardFor(role: string | null | undefined) {
   return role === 'rider' ? '/rider' : role === 'company' ? '/company' : '/vendor'
 }
 
-// Sends the person to Google or Apple. They come back to /auth/callback.
+// Sends the person to Google or Facebook. They come back to /auth/callback.
 // Returns an error message, or null when the redirect started.
 export async function startOAuth(provider: Provider, role?: 'vendor' | 'rider'): Promise<string | null> {
   const redirectTo = window.location.origin + '/auth/callback' + (role ? '?role=' + role : '')
@@ -28,7 +28,7 @@ export async function startOAuth(provider: Provider, role?: 'vendor' | 'rider'):
   return providerLabel[provider] + ' sign-in failed: ' + error.message
 }
 
-// Accounts created through Google or Apple (not email and password).
+// Accounts created through Google or Facebook (not email and password).
 export function isSocialUser(user: User) {
   const provider = user.app_metadata?.provider
   return !!provider && provider !== 'email'
@@ -42,7 +42,7 @@ export function isValidPhone(phone: string | null | undefined) {
   return (phone ?? '').replace(/\D/g, '').length >= 7
 }
 
-// A Google or Apple account must have a profile, a phone number, and accepted the terms
+// A Google or Facebook account must have a profile, a phone number, and accepted the terms
 // before it can use the app. Email accounts already give these at signup.
 export function needsCompletion(user: User, profile: { phone: string | null } | null) {
   if (!profile) return true

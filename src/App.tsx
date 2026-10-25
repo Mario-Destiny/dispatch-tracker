@@ -12,6 +12,7 @@ import CompanySignup from './CompanySignup'
 import BusinessPage from './BusinessPage'
 import AdminPage from './AdminPage'
 import StatusGate from './StatusGate'
+import Settings from './Settings'
 import CustomerPin from './CustomerPin'
 import VendorShowcase from './VendorShowcase'
 import RiderShowcase from './RiderShowcase'
@@ -239,6 +240,7 @@ export function AppRoutes() {
                                   <Route path="/l/:token" element={<CustomerPin />} />
   <Route path="/auth/callback" element={<AuthCallback />} />
   <Route path="/complete-profile" element={<CompleteProfile />} />
+  <Route path="/settings" element={<StatusGate><Settings /></StatusGate>} />
   <Route path="/track" element={<TrackPage />} />
   <Route path="/login" element={<Login />} />
   <Route path="/pitch" element={<Navigate to="/" replace />} />

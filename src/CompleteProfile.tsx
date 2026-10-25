@@ -8,7 +8,7 @@ import { dashboardFor, isValidPhone, needsCompletion } from './authFlow'
 
 type Role = 'vendor' | 'rider'
 
-// Shown after Google or Apple sign-in: collects a phone number and the person's agreement
+// Shown after Google or Facebook sign-in: collects a phone number and the person's agreement
 // to the Terms before the account can be used.
 function CompleteProfile() {
   const navigate = useNavigate()

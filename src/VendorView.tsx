@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import LocationSelector from './LocationSelector'
 import { useTheme } from './useTheme'
+import Avatar from './Avatar'
+import { useMyAvatar } from './useMyAvatar'
 import StatusBadge from './StatusBadge'
 import Spinner from './Spinner'
 import Skeleton from './Skeleton'
@@ -160,6 +162,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const { theme, toggleTheme } = useTheme()
   const [userId, setUserId] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
+  const myAvatar = useMyAvatar(name)
   const [company, setCompany] = useState<Company | null>(null)
   const [loadingCompany, setLoadingCompany] = useState(isCompany)
   const [plan, setPlan] = useState<'free' | 'pro' | null>(null)
@@ -549,7 +552,10 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                        <MyBadges />
                   
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <Link to="/settings" className="header-avatar-link" aria-label="Settings" title="Settings">
+              <Avatar url={myAvatar} name={name} size={36} />
+            </Link>
             <button
               onClick={toggleTheme}
               style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 6, padding: '6px 12px', color: 'var(--text)' }}
