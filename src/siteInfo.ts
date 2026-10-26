@@ -5,7 +5,7 @@ export const SITE_DESCRIPTION =
 // Public address of the site. Used for canonical links in the prerendered pages.
 // If you change domain, also update index.html, public/robots.txt, public/sitemap.xml and public/llms.txt.
 export const SITE_URL = 'https://veritrack-app.vercel.app'
-export const CONTACT_EMAIL = 'Chukwaebukadestiny@gmail.com'
+export const CONTACT_EMAIL = 'veritrackapp@gmail.com'
 export const LAST_UPDATED = 'October 9, 2026'
 
 

@@ -37,3 +37,7 @@ npm run build
 ```
 
 The build also saves search-friendly HTML for the public pages (`scripts/prerender.mjs`).
+
+## Contact
+
+veritrackapp@gmail.com
