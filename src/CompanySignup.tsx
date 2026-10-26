@@ -3,6 +3,9 @@ import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
+import PasswordFields, { passwordsOk } from './PasswordFields'
+import TermsCheckbox from './TermsCheckbox'
+import { consentMetadata, recordConsent } from './consent'
 
 const SIZE_OPTIONS = ['1–5 riders', '6–20 riders', '21–50 riders', '51+ riders']
 const TRACKING_OPTIONS = [
@@ -19,6 +22,8 @@ function CompanySignup() {
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [agreed, setAgreed] = useState(false)
   const [city, setCity] = useState('')
   const [stateName, setStateName] = useState('')
   const [size, setSize] = useState('')
@@ -28,9 +33,23 @@ function CompanySignup() {
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
+
+    if (!passwordsOk(password, confirm)) {
+      showToast('Passwords do not match.', 'error')
+      return
+    }
+    if (!agreed) {
+      showToast('Please agree to the Terms and Privacy Policy to continue.', 'error')
+      return
+    }
+
     setLoading(true)
 
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: consentMetadata() },
+    })
 
     if (error) {
       showToast('Signup failed: ' + error.message, 'error')
@@ -57,6 +76,8 @@ function CompanySignup() {
       setLoading(false)
       return
     }
+
+    await recordConsent('email_signup')
 
     const { error: companyError } = await supabase.rpc('create_company', {
       p_name: companyName,
@@ -139,20 +160,13 @@ function CompanySignup() {
             />
           </div>
 
-          <div className="field">
-            <label className="field-label" htmlFor="co-password">Password</label>
-            <input
-              id="co-password"
-              className="field-input"
-              type="password"
-              autoComplete="new-password"
-              placeholder="At least 6 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
+          <PasswordFields
+            idPrefix="co"
+            password={password}
+            confirm={confirm}
+            onPasswordChange={setPassword}
+            onConfirmChange={setConfirm}
+          />
 
           <div className="field">
             <label className="field-label" htmlFor="co-city">City</label>
@@ -220,15 +234,11 @@ function CompanySignup() {
             </select>
           </div>
 
-          <button type="submit" className="btn-primary btn-block" disabled={loading}>
+          <TermsCheckbox id="co-terms" checked={agreed} onChange={setAgreed} />
+
+          <button type="submit" className="btn-primary btn-block" disabled={loading || !agreed || !passwordsOk(password, confirm)}>
             {loading ? <><Spinner size="sm" /> Creating...</> : 'Create company account'}
           </button>
-
-          <p style={{ margin: 0, textAlign: 'center', fontSize: 13, color: 'var(--text-secondary)' }}>
-            By signing up you agree to our{' '}
-            <Link to="/terms" style={{ color: 'var(--accent)' }}>Terms</Link> and{' '}
-            <Link to="/privacy" style={{ color: 'var(--accent)' }}>Privacy Policy</Link>.
-          </p>
         </form>
 
         <p style={{ marginTop: 20, textAlign: 'center', color: 'var(--text-secondary)' }}>

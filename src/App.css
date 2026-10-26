@@ -1534,3 +1534,62 @@ html {
 .lp-price { font-size: 28px; font-weight: 800; color: var(--text) !important; margin: 4px 0 8px !important; }
 .lp-price small { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
 .lp-featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+
+/* Password fields: show/hide toggle, strength hint, match message */
+.password-wrap { position: relative; }
+.password-wrap .field-input { padding-right: 48px; }
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.password-toggle:hover { color: var(--text); }
+.password-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.strength { display: flex; align-items: center; gap: 10px; }
+.strength-bars { display: flex; gap: 4px; flex: 1; }
+.strength-bar { flex: 1; height: 5px; border-radius: 3px; background: var(--border); transition: background 0.2s ease; }
+.strength-bar.on.s1 { background: #dc2626; }
+.strength-bar.on.s2 { background: #f59e0b; }
+.strength-bar.on.s3 { background: #16a34a; }
+.strength-label { font-size: 13px; font-weight: 600; min-width: 64px; text-align: right; }
+.strength-label.s1 { color: #dc2626; }
+.strength-label.s2 { color: #d97706; }
+.strength-label.s3 { color: #16a34a; }
+
+.match-msg { font-size: 13px; font-weight: 600; }
+.match-msg.ok { color: #16a34a; }
+.match-msg.bad { color: #dc2626; }
+.field-input[aria-invalid='true'] { border-color: #dc2626; }
+
+/* Required Terms / Privacy agreement */
+.terms-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  cursor: pointer;
+}
+.terms-check input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.terms-check a { color: var(--accent); font-weight: 600; }
+.btn-primary:disabled { cursor: not-allowed; }
