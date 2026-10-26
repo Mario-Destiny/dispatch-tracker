@@ -5,6 +5,7 @@ import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
 import { dashboardFor, isValidPhone, needsCompletion } from './authFlow'
+import { consentMetadata, recordConsent } from './consent'
 
 type Role = 'vendor' | 'rider'
 
@@ -89,8 +90,10 @@ function CompleteProfile() {
       return
     }
 
+    await recordConsent('social_signup')
+
     const { error: consentError } = await supabase.auth.updateUser({
-      data: { terms_accepted_at: new Date().toISOString() },
+      data: consentMetadata(),
     })
 
     if (consentError) {

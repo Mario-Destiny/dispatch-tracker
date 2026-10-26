@@ -5,6 +5,7 @@ import Spinner from './Spinner'
 import { showToast } from './toast'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
+import { consentMetadata, recordConsent } from './consent'
 
 const SIZE_OPTIONS = ['1–5 riders', '6–20 riders', '21–50 riders', '51+ riders']
 const TRACKING_OPTIONS = [
@@ -44,7 +45,11 @@ function CompanySignup() {
 
     setLoading(true)
 
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: consentMetadata() },
+    })
 
     if (error) {
       showToast('Signup failed: ' + error.message, 'error')
@@ -71,6 +76,8 @@ function CompanySignup() {
       setLoading(false)
       return
     }
+
+    await recordConsent('email_signup')
 
     const { error: companyError } = await supabase.rpc('create_company', {
       p_name: companyName,

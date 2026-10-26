@@ -6,6 +6,7 @@ import { showToast } from './toast'
 import SocialButtons from './SocialButtons'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
+import { consentMetadata, recordConsent } from './consent'
 
 function VendorSignup() {
   const navigate = useNavigate()
@@ -31,7 +32,11 @@ function VendorSignup() {
 
     setLoading(true)
 
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: consentMetadata() },
+    })
 
     if (error) {
       showToast('Signup failed: ' + error.message, 'error')
@@ -59,6 +64,7 @@ function VendorSignup() {
       return
     }
 
+    await recordConsent('email_signup')
     navigate('/vendor')
   }
 
