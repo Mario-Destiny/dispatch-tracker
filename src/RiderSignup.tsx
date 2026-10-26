@@ -3,18 +3,32 @@ import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
+import PasswordFields, { passwordsOk } from './PasswordFields'
+import TermsCheckbox from './TermsCheckbox'
 import SocialButtons from './SocialButtons'
 
 function RiderSignup() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [agreed, setAgreed] = useState(false)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
+
+    if (!passwordsOk(password, confirm)) {
+      showToast('Passwords do not match.', 'error')
+      return
+    }
+    if (!agreed) {
+      showToast('Please agree to the Terms and Privacy Policy to continue.', 'error')
+      return
+    }
+
     setLoading(true)
 
     const { data, error } = await supabase.auth.signUp({ email, password })
@@ -101,34 +115,23 @@ function RiderSignup() {
               />
             </div>
 
-            <div className="field">
-              <label className="field-label" htmlFor="rider-password">Password</label>
-              <input
-                id="rider-password"
-                className="field-input"
-                type="password"
-                autoComplete="new-password"
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
+            <PasswordFields
+              idPrefix="rider"
+              password={password}
+              confirm={confirm}
+              onPasswordChange={setPassword}
+              onConfirmChange={setConfirm}
+            />
 
-            <button type="submit" className="btn-primary btn-block" disabled={loading}>
+            <TermsCheckbox id="rider-terms" checked={agreed} onChange={setAgreed} />
+
+            <button type="submit" className="btn-primary btn-block" disabled={loading || !agreed || !passwordsOk(password, confirm)}>
               {loading ? <><Spinner size="sm" /> Signing up...</> : 'Sign Up'}
             </button>
           </form>
         </div>
 
 
-        <p style={{ marginTop: 16, textAlign: 'center', fontSize: 13, color: 'var(--text-secondary)' }}>
-          By signing up you agree to our{' '}
-          <Link to="/terms" style={{ color: 'var(--accent)' }}>Terms</Link> and{' '}
-          <Link to="/privacy" style={{ color: 'var(--accent)' }}>Privacy Policy</Link>.
-        </p>
-        
         <p style={{ marginTop: 20, textAlign: 'center', color: 'var(--text-secondary)' }}>
           Already have an account?{' '}
           <Link to="/login" style={{ color: 'var(--accent)' }}>Log in</Link>
