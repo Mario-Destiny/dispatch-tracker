@@ -6,7 +6,7 @@ import Spinner from './Spinner'
 import { showToast } from './toast'
 import { dashboardFor, needsCompletion } from './authFlow'
 
-// The session can take a moment to appear after Google or Facebook sends the person back.
+// The session can take a moment to appear after Google or LinkedIn sends the person back.
 async function waitForSession(): Promise<Session | null> {
   for (let i = 0; i < 8; i++) {
     const { data } = await supabase.auth.getSession()

@@ -15,15 +15,15 @@ function GoogleMark() {
   )
 }
 
-function FacebookMark() {
+function LinkedInMark() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="#ffffff" d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.971h-1.513c-1.491 0-1.956.931-1.956 1.887v2.263h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+      <path fill="#ffffff" d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
     </svg>
   )
 }
 
-// Google and Facebook buttons used on the login and signup pages.
+// Google and LinkedIn buttons used on the login and signup pages.
 function SocialButtons({ role }: { role?: 'vendor' | 'rider' }) {
   const [busy, setBusy] = useState<Provider | null>(null)
 
@@ -41,8 +41,8 @@ function SocialButtons({ role }: { role?: 'vendor' | 'rider' }) {
       <button type="button" className="btn-google" onClick={() => go('google')} disabled={busy !== null}>
         {busy === 'google' ? <><Spinner size="sm" /> Redirecting...</> : <><GoogleMark /> Continue with Google</>}
       </button>
-      <button type="button" className="btn-facebook" onClick={() => go('facebook')} disabled={busy !== null}>
-        {busy === 'facebook' ? <><Spinner size="sm" /> Redirecting...</> : <><FacebookMark /> Continue with Facebook</>}
+      <button type="button" className="btn-linkedin" onClick={() => go('linkedin_oidc')} disabled={busy !== null}>
+        {busy === 'linkedin_oidc' ? <><Spinner size="sm" /> Redirecting...</> : <><LinkedInMark /> Continue with LinkedIn</>}
       </button>
     </div>
   )

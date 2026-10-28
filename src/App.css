@@ -1304,14 +1304,14 @@ html {
 }
 
 
-/* ===== Google and Facebook sign-in ===== */
+/* ===== Google and LinkedIn sign-in ===== */
 .social-buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.btn-facebook {
+.btn-linkedin {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1321,12 +1321,12 @@ html {
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
-  background: #1877f2;
-  border: 1px solid #1877f2;
+  background: #0a66c2;
+  border: 1px solid #0a66c2;
   border-radius: 10px;
 }
 
-.btn-facebook:disabled {
+.btn-linkedin:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }

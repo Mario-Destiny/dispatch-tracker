@@ -7,7 +7,7 @@ export const TERMS_VERSION = LAST_UPDATED
 
 export type ConsentMethod = 'email_signup' | 'social_signup'
 
-// Data saved on the account itself at signup. The Google/Facebook flow reads terms_accepted_at.
+// Data saved on the account itself at signup. The Google/LinkedIn flow reads terms_accepted_at.
 export function consentMetadata() {
   return { terms_accepted_at: new Date().toISOString(), terms_version: TERMS_VERSION }
 }
