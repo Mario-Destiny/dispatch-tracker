@@ -5,6 +5,7 @@ import Skeleton from './Skeleton'
 import VerifiedTick from './VerifiedTick'
 import BusinessBadges from './BusinessBadges'
 import ReportBox from './ReportBox'
+import Avatar from './Avatar'
 import { tickTitle } from './businessUtils'
 import { SITE_NAME } from './siteInfo'
 
@@ -20,6 +21,7 @@ type PublicBusiness = {
   verification_type: string | null
   registered_checked: boolean
   phone: string | null
+  avatar_url?: string | null
   delivered: number
   completion_rate: number | null
   avg_minutes: number | null
@@ -89,7 +91,11 @@ function BusinessPage() {
         ) : (
           <div className="form-card fade-in-card">
             <div className="co-head">
-              <div className="co-avatar">{initialsOf(biz.name)}</div>
+              {biz.avatar_url ? (
+                <Avatar url={biz.avatar_url} name={biz.name} size={56} />
+              ) : (
+                <div className="co-avatar">{initialsOf(biz.name)}</div>
+              )}
               <div>
                 <div className="co-name">
                   {biz.name}
