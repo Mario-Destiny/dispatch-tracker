@@ -244,7 +244,7 @@ function Settings() {
           <div className="settings-photo-row">
             <Avatar url={avatarUrl} name={name} size={84} />
             <div className="settings-photo-actions">
-              <p className="settings-hint">Use your face or your company logo. Square photos look best.</p>
+              <p className="settings-hint">Use your face or your company logo. Square photos look best. This photo is public: it shows on your business page.</p>
               <input ref={fileRef} type="file" accept="image/*" hidden onChange={handlePhoto} aria-label="Choose profile photo" />
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <button type="button" className="btn-primary" disabled={uploading} onClick={() => fileRef.current?.click()}>
