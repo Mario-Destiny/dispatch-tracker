@@ -6,6 +6,8 @@ import Spinner from './Spinner'
 import { showToast } from './toast'
 import { dashboardFor, isValidPhone, needsCompletion } from './authFlow'
 import { consentMetadata, recordConsent } from './consent'
+import WorkAreaPicker from './WorkAreaPicker'
+import { loadMyWorkAreas, saveWorkAreas } from './areas'
 
 type Role = 'vendor' | 'rider'
 
@@ -21,6 +23,7 @@ function CompleteProfile() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [agreed, setAgreed] = useState(false)
+  const [areas, setAreas] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -61,6 +64,7 @@ function CompleteProfile() {
           (u.email ? u.email.split('@')[0] : '')
       )
       setPhone(profile?.phone ?? '')
+      if (profile?.role === 'rider') setAreas((await loadMyWorkAreas(u.id)) ?? [])
       setLoading(false)
     }
     load()
@@ -73,6 +77,7 @@ function CompleteProfile() {
     if (!role) return setError('Choose whether you are a vendor or a rider.')
     if (!name.trim()) return setError('Enter your full name.')
     if (!isValidPhone(phone)) return setError('Enter a valid phone number.')
+    if (role === 'rider' && areas.length === 0) return setError('Choose at least one area where you work.')
     if (!agreed) return setError('Please agree to the Terms of Service and Privacy Policy to continue.')
     setError('')
     setSubmitting(true)
@@ -88,6 +93,13 @@ function CompleteProfile() {
       showToast('Could not save your details: ' + profileError.message, 'error')
       setSubmitting(false)
       return
+    }
+
+    if (role === 'rider') {
+      const areaError = await saveWorkAreas(areas)
+      if (areaError) {
+        showToast('Your account is ready, but your work areas were not saved: ' + areaError + ' Add them in Settings.', 'error')
+      }
     }
 
     await recordConsent('social_signup')
@@ -178,6 +190,8 @@ function CompleteProfile() {
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
+
+          {role === 'rider' && <WorkAreaPicker idPrefix="cp-areas" value={areas} onChange={setAreas} required />}
 
           <label className="check-row">
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />

@@ -6,6 +6,8 @@ import { showToast } from './toast'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
 import { consentMetadata, recordConsent } from './consent'
+import WorkAreaPicker from './WorkAreaPicker'
+import { saveWorkAreas } from './areas'
 import SocialButtons from './SocialButtons'
 
 function RiderSignup() {
@@ -13,6 +15,7 @@ function RiderSignup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
+  const [areas, setAreas] = useState<string[]>([])
   const [agreed, setAgreed] = useState(false)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -23,6 +26,10 @@ function RiderSignup() {
 
     if (!passwordsOk(password, confirm)) {
       showToast('Passwords do not match.', 'error')
+      return
+    }
+    if (areas.length === 0) {
+      showToast('Choose at least one area where you work.', 'error')
       return
     }
     if (!agreed) {
@@ -65,6 +72,12 @@ function RiderSignup() {
     }
 
     await recordConsent('email_signup')
+
+    const areaError = await saveWorkAreas(areas)
+    if (areaError) {
+      showToast('Your account is ready, but your work areas were not saved: ' + areaError + ' Add them in Settings.', 'error')
+    }
+
     navigate('/rider')
   }
 
@@ -121,6 +134,8 @@ function RiderSignup() {
               />
             </div>
 
+            <WorkAreaPicker idPrefix="rider-areas" value={areas} onChange={setAreas} required />
+
             <PasswordFields
               idPrefix="rider"
               password={password}
@@ -131,7 +146,7 @@ function RiderSignup() {
 
             <TermsCheckbox id="rider-terms" checked={agreed} onChange={setAgreed} />
 
-            <button type="submit" className="btn-primary btn-block" disabled={loading || !agreed || !passwordsOk(password, confirm)}>
+            <button type="submit" className="btn-primary btn-block" disabled={loading || !agreed || areas.length === 0 || !passwordsOk(password, confirm)}>
               {loading ? <><Spinner size="sm" /> Signing up...</> : 'Sign Up'}
             </button>
           </form>
