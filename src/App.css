@@ -1593,3 +1593,74 @@ html {
 }
 .terms-check a { color: var(--accent); font-weight: 600; }
 .btn-primary:disabled { cursor: not-allowed; }
+
+/* Rider work areas */
+.area-picker { gap: 10px; }
+.area-note { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+.area-count { font-size: 13px; font-weight: 700; color: var(--text); }
+.area-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.area-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 12px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.area-chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.area-chip button:hover { color: var(--text); background: var(--border); }
+.area-list {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+}
+.area-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 8px 14px;
+  font-size: 15px;
+  color: var(--text);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+.area-row:last-child { border-bottom: none; }
+.area-row input { width: 20px; height: 20px; margin: 0; flex-shrink: 0; accent-color: var(--accent); cursor: pointer; }
+.area-row.on { background: var(--bg-secondary); font-weight: 600; }
+.area-row.off { opacity: 0.5; cursor: not-allowed; }
+.area-row.off input { cursor: not-allowed; }
+.area-nudge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+}
+.area-nudge p { margin: 0; flex: 1; min-width: 200px; }

@@ -12,6 +12,7 @@ import VerifiedTick from './VerifiedTick'
 import { tickTitle } from './businessUtils'
 import { hasPin, navLink } from './maps'
 import { showToast } from './toast'
+import { loadMyWorkAreas } from './areas'
 
 type Delivery = {
   id: string
@@ -66,6 +67,7 @@ function RiderView() {
   const [fleet, setFleet] = useState<Fleet | null>(null)
   const [inviteCode, setInviteCode] = useState('')
   const [fleetBusy, setFleetBusy] = useState(false)
+  const [needsAreas, setNeedsAreas] = useState(false)
 
   useEffect(() => {
     async function checkUser() {
@@ -84,6 +86,10 @@ function RiderView() {
 
       if (profile) setIsAvailable(profile.is_available)
       setName(profile?.name ?? '')
+
+      // Nudge riders who have not said where they work (stays quiet if areas cannot be read)
+      const mine = await loadMyWorkAreas(data.user.id)
+      setNeedsAreas(mine !== null && mine.length === 0)
 
       setCheckingAuth(false)
     }
@@ -297,6 +303,15 @@ function RiderView() {
             <button onClick={handleLogout}>Log Out</button>
           </div>
         </div>
+
+        {needsAreas && (
+          <div className="area-nudge" role="status">
+            <p>
+              <strong>Tell vendors where you work.</strong> Add your work areas so vendors in those areas can find you first.
+            </p>
+            <Link to="/settings#work-areas" className="btn-primary btn-sm" style={{ textDecoration: 'none' }}>Add areas</Link>
+          </div>
+        )}
 
         {shareState !== 'idle' && (
           <div className={'share-banner ' + (shareState === 'sharing' ? 'ok' : shareState === 'asking' ? '' : 'bad')} role="status">

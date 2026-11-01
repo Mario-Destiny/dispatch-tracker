@@ -9,6 +9,8 @@ import { useTheme } from './useTheme'
 import type { ThemeMode } from './useTheme'
 import { dashboardFor, isSocialUser, isValidPhone, providerLabel } from './authFlow'
 import type { Provider } from './authFlow'
+import WorkAreaPicker from './WorkAreaPicker'
+import { readWorkAreas, saveWorkAreas } from './areas'
 
 const MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 
@@ -48,6 +50,8 @@ function Settings() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [savingDetails, setSavingDetails] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [areas, setAreas] = useState<string[]>([])
+  const [savingAreas, setSavingAreas] = useState(false)
   const [detailsError, setDetailsError] = useState('')
 
   const [newEmail, setNewEmail] = useState('')
@@ -80,11 +84,19 @@ function Settings() {
         setPhone(profile.phone || '')
         setRole(profile.role || null)
         setAvatarUrl(typeof profile.avatar_url === 'string' ? profile.avatar_url : null)
+        setAreas(readWorkAreas(profile.work_areas))
       }
       setLoading(false)
     }
     load()
   }, [navigate])
+
+  // Opening /settings#work-areas (from the rider dashboard nudge) jumps to the work areas section
+  useEffect(() => {
+    if (!loading && window.location.hash === '#work-areas') {
+      document.getElementById('work-areas')?.scrollIntoView({ block: 'start' })
+    }
+  }, [loading])
 
   async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -135,6 +147,17 @@ function Settings() {
     }
     setAvatarUrl(null)
     showToast('Photo removed.', 'success')
+  }
+
+  async function saveAreas() {
+    setSavingAreas(true)
+    const error = await saveWorkAreas(areas)
+    setSavingAreas(false)
+    if (error) {
+      showToast('Could not save your work areas: ' + error, 'error')
+      return
+    }
+    showToast('Work areas saved.', 'success')
   }
 
   async function saveDetails(e: React.FormEvent) {
@@ -292,6 +315,16 @@ function Settings() {
             {savingDetails ? <><Spinner size="sm" /> Saving...</> : 'Save details'}
           </button>
         </form>
+
+        {role === 'rider' && (
+          <section id="work-areas" className="form-card settings-card">
+            <h2 className="settings-h">Where you work</h2>
+            <WorkAreaPicker idPrefix="set-areas" value={areas} onChange={setAreas} />
+            <button type="button" className="btn-primary btn-block" style={{ marginTop: 14 }} disabled={savingAreas || areas.length === 0} onClick={saveAreas}>
+              {savingAreas ? <><Spinner size="sm" /> Saving...</> : 'Save work areas'}
+            </button>
+          </section>
+        )}
 
         <section className="form-card settings-card">
           <h2 className="settings-h">Notifications</h2>
