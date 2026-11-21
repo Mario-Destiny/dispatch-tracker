@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION =
 // If you change domain, also update index.html, public/robots.txt, public/sitemap.xml and public/llms.txt.
 export const SITE_URL = 'https://veritrack-app.vercel.app'
 export const CONTACT_EMAIL = 'veritrackapp@gmail.com'
-export const LAST_UPDATED = 'October 9, 2026'
+export const LAST_UPDATED = 'November 21, 2026'
 
 
 // Free plan: most deliveries a free vendor can create per calendar month.

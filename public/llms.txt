@@ -1,8 +1,8 @@
 # Veritrack
 
-> Every delivery, verified and tracked. Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. It is built for small vendors and informal dispatch riders in Nigeria, with no app to download and no phone calls needed.
+> Every delivery, verified and tracked. Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. It is built for vendors and dispatch riders, with no app to download and no phone calls needed. Veritrack is launching in Nigeria and is built to expand internationally.
 
-Veritrack is built and maintained by Bright Dimkpa, a self-taught developer in Nigeria. Contact: veritrackapp@gmail.com
+Veritrack is a product of Justbeth International Limited, founded by Bright Dimkpa. Contact: veritrackapp@gmail.com
 
 ## What it does
 

@@ -139,9 +139,12 @@ export function Home() {
         <div style={{ padding: '60px 40px', maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ color: 'var(--text)' }}>About Veritrack</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-            Veritrack was built to solve a real, everyday problem for small vendors and
-            informal dispatch riders across Nigeria: the lack of visibility into where a delivery
-            actually is. Every delivery gets a status, a rider, and a tracking code the customer can check.
+            Veritrack was built to solve a real, everyday problem for vendors and dispatch riders:
+            the lack of visibility into where a delivery actually is. Every delivery gets a status, a
+            rider, and a tracking code the customer can check.
+          </p>
+          <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+            Built and operated by {COMPANY_NAME}.
           </p>
         </div>
 

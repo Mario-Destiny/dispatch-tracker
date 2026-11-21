@@ -94,7 +94,7 @@ function PitchPage() {
         <div style={{ maxWidth: 640, margin: '0 auto', padding: '20px 20px 40px' }}>
           <h2 style={{ color: 'var(--text)' }}>The Problem</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
-            Across Nigeria, small vendors and informal dispatch riders coordinate deliveries almost
+            Around the world, small vendors and informal dispatch riders coordinate deliveries almost
             entirely through phone calls and trust. There's no record of who has a package, where
             it is, or when it's expected to arrive. When something goes wrong — a delay, a denied
             pickup, a lost item — there's no way to know who to hold accountable.
