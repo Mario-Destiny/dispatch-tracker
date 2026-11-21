@@ -24,7 +24,7 @@ import './App.css'
 import ToastContainer from './ToastContainer'
 import Privacy from './Privacy'
 import Terms from './Terms'
-import { CONTACT_EMAIL } from './siteInfo'
+import { CONTACT_EMAIL, COMPANY_NAME } from './siteInfo'
 
 function HeroIllustration() {
   return (
@@ -166,7 +166,7 @@ export function Home() {
                       <Link to="/privacy" style={{ color: 'var(--text-secondary)' }}>Privacy Policy</Link>
             <Link to="/terms" style={{ color: 'var(--text-secondary)' }}>Terms of Service</Link>
           </div>
-          <div>© {new Date().getFullYear()} Veritrack. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.</div>
         </footer>
       </div>
     </div>

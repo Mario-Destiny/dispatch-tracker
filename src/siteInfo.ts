@@ -1,4 +1,6 @@
 export const SITE_NAME = 'Veritrack'
+// Registered company that owns and operates Veritrack.
+export const COMPANY_NAME = 'Justbeth International Limited'
 export const TAGLINE = 'Every delivery, verified and tracked.'
 export const SITE_DESCRIPTION =
   'Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. No app to download, no phone calls, no guessing.'
