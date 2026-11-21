@@ -1,11 +1,11 @@
 import LegalPage from './LegalPage'
-import { SITE_NAME, CONTACT_EMAIL } from './siteInfo'
+import { SITE_NAME, COMPANY_NAME, CONTACT_EMAIL } from './siteInfo'
 
 function Terms() {
   return (
     <LegalPage title="Terms of Service">
       <p>
-        These terms govern your use of {SITE_NAME}. By creating an account or using the service you
+        These terms govern your use of {SITE_NAME}, which is operated by {COMPANY_NAME}. By creating an account or using the service you
         agree to them. If you do not agree, please do not use the service.
       </p>
 
@@ -119,6 +119,8 @@ function Terms() {
 
       <h2>13. Contact</h2>
       <p>
+        {COMPANY_NAME}, operator of {SITE_NAME}
+        <br />
         <a href={'mailto:' + CONTACT_EMAIL}>{CONTACT_EMAIL}</a>
       </p>
     </LegalPage>

@@ -10,7 +10,7 @@ const dist = path.resolve('dist')
 const PAGES = [
   {
     route: '/',
-    title: 'Veritrack | Delivery tracking for vendors and riders in Nigeria',
+    title: 'Veritrack | Delivery tracking for vendors and riders',
     description:
       'Veritrack gives every delivery a status, a rider, and a tracking code your customer can check themselves. No app to download, no phone calls, no guessing.',
   },
@@ -18,7 +18,7 @@ const PAGES = [
     route: '/home',
     title: 'Veritrack Platform | Track deliveries as a vendor, rider or customer',
     description:
-      'See how vendors create deliveries, riders update status, and customers track with a code. Built for small vendors and dispatch riders in Nigeria.',
+      'See how vendors create deliveries, riders update status, and customers track with a code. A product of Justbeth International Limited.',
   },
   {
     route: '/privacy',

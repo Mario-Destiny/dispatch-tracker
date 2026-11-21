@@ -1,5 +1,5 @@
 import LegalPage from './LegalPage'
-import { SITE_NAME, CONTACT_EMAIL } from './siteInfo'
+import { SITE_NAME, COMPANY_NAME, CONTACT_EMAIL } from './siteInfo'
 
 function Privacy() {
   return (
@@ -12,7 +12,8 @@ function Privacy() {
       <h2>1. Who we are</h2>
       <p>
         {SITE_NAME} is a web platform that helps vendors, dispatch riders and customers track
-        deliveries. Questions about this policy can be sent to{' '}
+        deliveries. {SITE_NAME} is operated by {COMPANY_NAME}, which is responsible for the personal
+        information described in this policy. Questions about this policy can be sent to{' '}
         <a href={'mailto:' + CONTACT_EMAIL}>{CONTACT_EMAIL}</a>.
       </p>
 
@@ -84,7 +85,8 @@ function Privacy() {
         You may ask to access, correct or delete your personal information, to object to certain
         uses, or to withdraw your consent. Email us at{' '}
         <a href={'mailto:' + CONTACT_EMAIL}>{CONTACT_EMAIL}</a>. You also have the right to complain
-        to the Nigeria Data Protection Commission.
+        to the Nigeria Data Protection Commission or to the data protection authority in the country
+        where you live.
       </p>
 
       <h2>8. Security</h2>
@@ -104,6 +106,8 @@ function Privacy() {
 
       <h2>11. Contact</h2>
       <p>
+        {COMPANY_NAME}, operator of {SITE_NAME}
+        <br />
         <a href={'mailto:' + CONTACT_EMAIL}>{CONTACT_EMAIL}</a>
       </p>
     </LegalPage>

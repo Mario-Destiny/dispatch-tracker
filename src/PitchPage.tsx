@@ -4,7 +4,7 @@ import Logo from './Logo'
 import AnimatedBackground from './AnimatedBackground'
 import AppShowcase from './AppShowcase'
 import DeliveryMapDemo from './DeliveryMapDemo'
-import { CONTACT_EMAIL, SITE_NAME } from './siteInfo'
+import { CONTACT_EMAIL, COMPANY_NAME } from './siteInfo'
 import { PRICING } from './pricing'
 
 function IconIllustration({ type }: { type: 'pin' | 'clock' | 'tag' }) {
@@ -94,7 +94,7 @@ function PitchPage() {
         <div style={{ maxWidth: 640, margin: '0 auto', padding: '20px 20px 40px' }}>
           <h2 style={{ color: 'var(--text)' }}>The Problem</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
-            Across Nigeria, small vendors and informal dispatch riders coordinate deliveries almost
+            Around the world, small vendors and informal dispatch riders coordinate deliveries almost
             entirely through phone calls and trust. There's no record of who has a package, where
             it is, or when it's expected to arrive. When something goes wrong — a delay, a denied
             pickup, a lost item — there's no way to know who to hold accountable.
@@ -174,13 +174,13 @@ function PitchPage() {
         <div style={{ maxWidth: 640, margin: '0 auto', padding: '60px 20px' }}>
           <h2 style={{ color: 'var(--text)' }}>Why I built Veritrack</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: 16 }}>
-            I'm Bright, a self-taught software developer from Nigeria. I kept seeing the same thing
-            everywhere: vendors and riders coordinating deliveries with nothing but phone calls and
-            hope. So I built Veritrack end to end, to give every delivery a clear status and every
-            customer a way to check it themselves.
+            I'm Bright, founder of Veritrack, a product of {COMPANY_NAME}. I kept seeing the same
+            thing everywhere: vendors and riders coordinating deliveries with nothing but phone
+            calls and hope. So I built Veritrack end to end, to give every delivery a clear status
+            and every customer a way to check it themselves.
           </p>
           <AppShowcase />
-          <p style={{ color: 'var(--text)', fontWeight: 600, marginTop: 16 }}>— Bright Dimkpa</p>
+          <p style={{ color: 'var(--text)', fontWeight: 600, marginTop: 16 }}>— Bright Dimkpa, Founder</p>
         </div>
 
         <div style={{ textAlign: 'center', padding: '30px 20px 70px' }}>
@@ -198,7 +198,7 @@ function PitchPage() {
             <Link to="/privacy">Privacy</Link>
             <Link to="/track">Track a delivery</Link>
           </nav>
-          <div>© {new Date().getFullYear()} {SITE_NAME}. Made in Nigeria.</div>
+          <div>© {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.</div>
         </footer>
       </div>
     </div>
