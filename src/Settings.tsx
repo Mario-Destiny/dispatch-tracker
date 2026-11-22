@@ -11,7 +11,7 @@ import { dashboardFor, isSocialUser, isValidPhone, providerLabel } from './authF
 import type { Provider } from './authFlow'
 import WorkAreaPicker from './WorkAreaPicker'
 import PhoneField from './PhoneField'
-import { toE164 } from './phone'
+import { phoneCountry, toE164 } from './phone'
 import { updateProfile } from './profileSave'
 import { readWorkAreas, saveWorkAreas } from './areas'
 
@@ -322,7 +322,7 @@ function Settings() {
         {role === 'rider' && (
           <section id="work-areas" className="form-card settings-card">
             <h2 className="settings-h">Where you work</h2>
-            <WorkAreaPicker idPrefix="set-areas" value={areas} onChange={setAreas} />
+            <WorkAreaPicker idPrefix="set-areas" value={areas} onChange={setAreas} defaultCountry={phoneCountry(phone)} />
             <button type="button" className="btn-primary btn-block" style={{ marginTop: 14 }} disabled={savingAreas || areas.length === 0} onClick={saveAreas}>
               {savingAreas ? <><Spinner size="sm" /> Saving...</> : 'Save work areas'}
             </button>

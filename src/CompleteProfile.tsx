@@ -6,7 +6,7 @@ import Spinner from './Spinner'
 import { showToast } from './toast'
 import { dashboardFor, needsCompletion } from './authFlow'
 import PhoneField from './PhoneField'
-import { isValidPhone, toE164 } from './phone'
+import { isValidPhone, phoneCountry, toE164 } from './phone'
 import { insertProfile, updateProfile } from './profileSave'
 import { consentMetadata, recordConsent } from './consent'
 import WorkAreaPicker from './WorkAreaPicker'
@@ -186,7 +186,7 @@ function CompleteProfile() {
             <PhoneField id="cp-phone" value={phone} onChange={setPhone} />
           </div>
 
-          {role === 'rider' && <WorkAreaPicker idPrefix="cp-areas" value={areas} onChange={setAreas} required />}
+          {role === 'rider' && <WorkAreaPicker idPrefix="cp-areas" value={areas} onChange={setAreas} required defaultCountry={phoneCountry(phone)} />}
 
           <label className="check-row">
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
