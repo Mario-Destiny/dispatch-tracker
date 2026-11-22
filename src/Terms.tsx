@@ -21,6 +21,7 @@ function Terms() {
         <li>You must be at least 18 years old.</li>
         <li>You must give accurate information and keep it up to date.</li>
         <li>You are responsible for keeping your login details safe and for activity on your account.</li>
+        <li>You may use {SITE_NAME} from any country where it is lawful for you to do so. You are responsible for following the laws that apply to you, including rules about delivering goods, working as a rider and handling customers' information. Some features, such as payments, may not be available in every country.</li>
       </ul>
 
       <h2>3. Vendors</h2>
@@ -64,6 +65,7 @@ function Terms() {
         <li>Sharing a location pin is voluntary. Only share it through links sent by the sender of your delivery.</li>
         <li>Senders and riders may use a pin only to complete that delivery, and must not store or share it afterwards.</li>
         <li>A pin may be inaccurate, so riders may still contact the customer to confirm the address.</li>
+        <li>While a delivery is in transit, a rider's phone location is shared with the sender and with the customer who has the tracking code, if the rider's device allows it, so they can follow the delivery. Senders and customers may use it only to follow that delivery and must not store or share it. {SITE_NAME} deletes it when the delivery is no longer in transit.</li>
       </ul>
       
       <h2>6. Acceptable use</h2>
@@ -75,8 +77,9 @@ function Terms() {
 
       <h2>7. Fees</h2>
       <p>
-        The service is currently free to use. We may introduce paid plans or fees in future, and we
-        will give notice before any charge applies to you.
+        Creating an account and tracking deliveries is free. Some features, such as the Verified
+        plans, are paid. The price and currency are shown before you pay, and payments are handled by
+        Paystack. We will give notice before introducing any new charge.
       </p>
 
       <h2>8. No guarantees</h2>
@@ -90,7 +93,8 @@ function Terms() {
       <p>
         To the fullest extent allowed by law, {SITE_NAME} is not responsible for lost, damaged or
         delayed items, disputes between users, or indirect or consequential losses arising from your
-        use of the service.
+        use of the service. Nothing in these terms limits any right you have under a law where you
+        live that cannot be excluded, such as certain consumer protection rights.
       </p>
 
       <h2>10. Suspension and ending your account</h2>
@@ -115,7 +119,10 @@ function Terms() {
       </p>
 
       <h2>12. Governing law</h2>
-      <p>These terms are governed by the laws of the Federal Republic of Nigeria.</p>
+      <p>
+        These terms are governed by the laws of the Federal Republic of Nigeria. This does not take away
+        any protection you have under the mandatory laws of the country where you live.
+      </p>
 
       <h2>13. Contact</h2>
       <p>
