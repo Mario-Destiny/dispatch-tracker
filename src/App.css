@@ -1664,3 +1664,12 @@ html {
   border-radius: 12px;
 }
 .area-nudge p { margin: 0; flex: 1; min-width: 200px; }
+
+/* Phone number with a country picker */
+.phone-field { display: flex; gap: 8px; align-items: stretch; }
+.phone-field .phone-country { flex: 0 0 52%; min-width: 0; max-width: 240px; text-overflow: ellipsis; }
+.phone-field .phone-number { flex: 1 1 auto; min-width: 0; }
+@media (max-width: 480px) {
+  .phone-field { flex-direction: column; }
+  .phone-field .phone-country { flex-basis: auto; max-width: none; }
+}

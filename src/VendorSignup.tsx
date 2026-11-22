@@ -7,6 +7,9 @@ import SocialButtons from './SocialButtons'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
 import { consentMetadata, recordConsent } from './consent'
+import PhoneField from './PhoneField'
+import { isValidPhone } from './phone'
+import { insertProfile } from './profileSave'
 
 function VendorSignup() {
   const navigate = useNavigate()
@@ -23,6 +26,10 @@ function VendorSignup() {
 
     if (!passwordsOk(password, confirm)) {
       showToast('Passwords do not match.', 'error')
+      return
+    }
+    if (!isValidPhone(phone)) {
+      showToast('Enter a valid phone number.', 'error')
       return
     }
     if (!agreed) {
@@ -51,7 +58,7 @@ function VendorSignup() {
       return
     }
 
-    const { error: profileError } = await supabase.from('profiles').insert({
+    const { error: profileError } = await insertProfile({
       id: userId,
       name,
       phone,
@@ -95,16 +102,7 @@ function VendorSignup() {
 
             <div className="field">
               <label className="field-label" htmlFor="vendor-phone">Phone</label>
-              <input
-                id="vendor-phone"
-                className="field-input"
-                type="tel"
-                autoComplete="tel"
-                placeholder="e.g. 0801 234 5678"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
+              <PhoneField id="vendor-phone" value={phone} onChange={setPhone} required />
             </div>
 
             <div className="field">

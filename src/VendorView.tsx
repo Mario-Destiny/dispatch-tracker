@@ -18,6 +18,8 @@ import { firstName } from './userName'
 import { CONTACT_EMAIL, CURRENCY, FREE_PLAN_MONTHLY_LIMIT } from './siteInfo'
 import { monthKey, inMonth, countInMonth, formatMoney, downloadMonthlyCsv } from './report'
 import { showToast } from './toast'
+import PhoneField from './PhoneField'
+import { phoneCountry, telHref, toE164, waDigits } from './phone'
 
 
 type Delivery = {
@@ -76,10 +78,7 @@ function generateCode(length: number, charset: string) {
 }
 
 function formatPhoneForWhatsApp(phone: string) {
-  const digitsOnly = phone.replace(/\D/g, '')
-  if (digitsOnly.startsWith('234')) return digitsOnly
-  if (digitsOnly.startsWith('0')) return '234' + digitsOnly.slice(1)
-  return digitsOnly
+  return waDigits(phone)
 }
 
 function buildWhatsAppLink(delivery: Delivery, pinToken?: string) {
@@ -181,6 +180,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const [dropoffPin, setDropoffPin] = useState<Pin | null>(null)
   const [pinTokens, setPinTokens] = useState<Record<string, string>>({})
   const [phone, setPhone] = useState('')
+  const [myCountry, setMyCountry] = useState<string | null>(null)
   const [eta, setEta] = useState('')
   const [fee, setFee] = useState('')
   const [selectedRiderId, setSelectedRiderId] = useState('')
@@ -201,10 +201,11 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
 
       const { data: prof } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, phone')
         .eq('id', data.user.id)
         .maybeSingle()
 
+      setMyCountry(phoneCountry(prof?.phone))
       const role = prof?.role
       if (role === 'company' && !isCompany) {
         navigate('/company', { replace: true })
@@ -396,7 +397,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
       dropoff_pin_source: dropoffPin ? (dropoffPin.url ? 'vendor_link' : 'vendor_gps') : null,
       dropoff_pin_at: dropoffPin ? new Date().toISOString() : null,
       client_name: isCompany ? clientName.trim() || null : null,
-      customer_phone: phone,
+      customer_phone: phone ? toE164(phone) ?? phone : phone,
       estimated_delivery: eta,
       delivery_fee: feeValue,
       tracking_code: trackingCode,
@@ -703,7 +704,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                           >
                             WhatsApp
                           </a>
-                          <a className="rider-btn" href={'tel:+' + intl}>Call</a>
+                          <a className="rider-btn" href={telHref(r.phone)}>Call</a>
                         </>
                       )}
 
@@ -818,13 +819,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
           />
           <div className="field">
             <label className="field-label" htmlFor="customer-phone">Customer phone</label>
-            <input
-              id="customer-phone"
-              className="field-input"
-              placeholder="e.g. 0801 234 5678"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <PhoneField id="customer-phone" value={phone} onChange={setPhone} defaultCountry={myCountry} />
           </div>
 
           <div className="field">

@@ -6,6 +6,9 @@ import { showToast } from './toast'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
 import { consentMetadata, recordConsent } from './consent'
+import PhoneField from './PhoneField'
+import { isValidPhone } from './phone'
+import { insertProfile } from './profileSave'
 
 const SIZE_OPTIONS = ['1–5 riders', '6–20 riders', '21–50 riders', '51+ riders']
 const TRACKING_OPTIONS = [
@@ -38,6 +41,10 @@ function CompanySignup() {
       showToast('Passwords do not match.', 'error')
       return
     }
+    if (!isValidPhone(phone)) {
+      showToast('Enter a valid phone number.', 'error')
+      return
+    }
     if (!agreed) {
       showToast('Please agree to the Terms and Privacy Policy to continue.', 'error')
       return
@@ -64,7 +71,7 @@ function CompanySignup() {
       return
     }
 
-    const { error: profileError } = await supabase.from('profiles').insert({
+    const { error: profileError } = await insertProfile({
       id: userId,
       name: contactName.trim(),
       phone,
@@ -134,16 +141,7 @@ function CompanySignup() {
 
           <div className="field">
             <label className="field-label" htmlFor="co-phone">Phone</label>
-            <input
-              id="co-phone"
-              className="field-input"
-              type="tel"
-              autoComplete="tel"
-              placeholder="e.g. 0801 234 5678"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
+            <PhoneField id="co-phone" value={phone} onChange={setPhone} required />
           </div>
 
           <div className="field">

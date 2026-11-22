@@ -9,6 +9,9 @@ import { consentMetadata, recordConsent } from './consent'
 import WorkAreaPicker from './WorkAreaPicker'
 import { saveWorkAreas } from './areas'
 import SocialButtons from './SocialButtons'
+import PhoneField from './PhoneField'
+import { isValidPhone } from './phone'
+import { insertProfile } from './profileSave'
 
 function RiderSignup() {
   const navigate = useNavigate()
@@ -30,6 +33,10 @@ function RiderSignup() {
     }
     if (areas.length === 0) {
       showToast('Choose at least one area where you work.', 'error')
+      return
+    }
+    if (!isValidPhone(phone)) {
+      showToast('Enter a valid phone number.', 'error')
       return
     }
     if (!agreed) {
@@ -58,7 +65,7 @@ function RiderSignup() {
       return
     }
 
-    const { error: profileError } = await supabase.from('profiles').insert({
+    const { error: profileError } = await insertProfile({
       id: userId,
       name,
       phone,
@@ -108,16 +115,7 @@ function RiderSignup() {
 
             <div className="field">
               <label className="field-label" htmlFor="rider-phone">Phone</label>
-              <input
-                id="rider-phone"
-                className="field-input"
-                type="tel"
-                autoComplete="tel"
-                placeholder="e.g. 0801 234 5678"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
+              <PhoneField id="rider-phone" value={phone} onChange={setPhone} required />
             </div>
 
             <div className="field">
