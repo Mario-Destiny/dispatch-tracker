@@ -10,6 +10,9 @@ import type { ThemeMode } from './useTheme'
 import { dashboardFor, isSocialUser, isValidPhone, providerLabel } from './authFlow'
 import type { Provider } from './authFlow'
 import WorkAreaPicker from './WorkAreaPicker'
+import PhoneField from './PhoneField'
+import { toE164 } from './phone'
+import { updateProfile } from './profileSave'
 import { readWorkAreas, saveWorkAreas } from './areas'
 
 const MAX_UPLOAD_BYTES = 8 * 1024 * 1024
@@ -173,7 +176,7 @@ function Settings() {
     }
     setDetailsError('')
     setSavingDetails(true)
-    const { error } = await supabase.from('profiles').update({ name: name.trim(), phone: phone.trim() }).eq('id', user.id)
+    const { error } = await updateProfile(user.id, { name: name.trim(), phone: toE164(phone) ?? phone.trim() })
     setSavingDetails(false)
     if (error) {
       showToast('Could not save: ' + error.message, 'error')
@@ -308,7 +311,7 @@ function Settings() {
           </div>
           <div className="field">
             <label className="field-label" htmlFor="set-phone">Phone number</label>
-            <input id="set-phone" className="field-input" type="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <PhoneField id="set-phone" value={phone} onChange={setPhone} />
           </div>
           {detailsError && <p className="field-error">{detailsError}</p>}
           <button type="submit" className="btn-primary btn-block" disabled={savingDetails}>

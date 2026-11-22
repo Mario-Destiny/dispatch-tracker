@@ -4,7 +4,10 @@ import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
-import { dashboardFor, isValidPhone, needsCompletion } from './authFlow'
+import { dashboardFor, needsCompletion } from './authFlow'
+import PhoneField from './PhoneField'
+import { isValidPhone, toE164 } from './phone'
+import { insertProfile, updateProfile } from './profileSave'
 import { consentMetadata, recordConsent } from './consent'
 import WorkAreaPicker from './WorkAreaPicker'
 import { loadMyWorkAreas, saveWorkAreas } from './areas'
@@ -83,11 +86,11 @@ function CompleteProfile() {
     setSubmitting(true)
 
     const cleanName = name.trim()
-    const cleanPhone = phone.trim()
+    const cleanPhone = toE164(phone) ?? phone.trim()
 
     const { error: profileError } = hasProfile
-      ? await supabase.from('profiles').update({ name: cleanName, phone: cleanPhone }).eq('id', user.id)
-      : await supabase.from('profiles').insert({ id: user.id, name: cleanName, phone: cleanPhone, role })
+      ? await updateProfile(user.id, { name: cleanName, phone: cleanPhone })
+      : await insertProfile({ id: user.id, name: cleanName, phone: cleanPhone, role })
 
     if (profileError) {
       showToast('Could not save your details: ' + profileError.message, 'error')
@@ -180,15 +183,7 @@ function CompleteProfile() {
 
           <div className="field">
             <label className="field-label" htmlFor="cp-phone">Phone number</label>
-            <input
-              id="cp-phone"
-              className="field-input"
-              type="tel"
-              autoComplete="tel"
-              placeholder="e.g. 0801 234 5678"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <PhoneField id="cp-phone" value={phone} onChange={setPhone} />
           </div>
 
           {role === 'rider' && <WorkAreaPicker idPrefix="cp-areas" value={areas} onChange={setAreas} required />}

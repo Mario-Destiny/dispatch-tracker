@@ -9,6 +9,8 @@ import PayPlan from './PayPlan'
 import { CONTACT_EMAIL } from './siteInfo'
 import { shortDate, tickTitle, type Badges } from './businessUtils'
 import { showToast } from './toast'
+import PhoneField from './PhoneField'
+import { toE164 } from './phone'
 
 type MyBusiness = {
   kind: 'vendor' | 'company'
@@ -111,7 +113,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
       p_city: newCity,
       p_state: newState,
       p_rc: null,
-      p_phone: newPhone,
+      p_phone: newPhone ? toE164(newPhone) ?? newPhone : newPhone,
     })
     setBusy(false)
 
@@ -144,7 +146,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
 
   async function savePhone() {
     setSavingPhone(true)
-    const { error } = await supabase.rpc('set_public_phone', { p_phone: publicPhone })
+    const { error } = await supabase.rpc('set_public_phone', { p_phone: publicPhone ? toE164(publicPhone) ?? publicPhone : publicPhone })
     setSavingPhone(false)
 
     if (error) {
@@ -226,14 +228,8 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
               </div>
               <div className="field">
                 <label className="field-label" htmlFor="biz-phone">Public contact number (optional)</label>
-                <input
-                  id="biz-phone"
-                  className="field-input"
-                  type="tel"
-                  placeholder="Leave empty to keep your number private"
-                  value={newPhone}
-                  onChange={(e) => setNewPhone(e.target.value)}
-                />
+                <PhoneField id="biz-phone" value={newPhone} onChange={setNewPhone} />
+                <p className="settings-hint">Leave empty to keep your number private.</p>
               </div>
               <button type="submit" className="btn-primary" disabled={busy}>
                 {busy ? <><Spinner size="sm" /> Creating...</> : 'Create my public page'}
@@ -388,15 +384,9 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
         <div className="field" style={{ marginTop: 16 }}>
           <label className="field-label" htmlFor="public-phone">Public contact number</label>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <input
-              id="public-phone"
-              className="field-input"
-              type="tel"
-              placeholder="e.g. 0801 234 5678"
-              value={publicPhone}
-              onChange={(e) => setPublicPhone(e.target.value)}
-              style={{ flex: 1, minWidth: 180 }}
-            />
+            <div style={{ flex: 1, minWidth: 220 }}>
+              <PhoneField id="public-phone" value={publicPhone} onChange={setPublicPhone} />
+            </div>
             <button type="button" className="btn-primary btn-sm" onClick={savePhone} disabled={savingPhone}>
               {savingPhone ? <><Spinner size="sm" /> Saving...</> : 'Save'}
             </button>

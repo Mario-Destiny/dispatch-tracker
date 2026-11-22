@@ -1,5 +1,6 @@
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabaseClient'
+import { isValidPhone } from './phone'
 
 // 'linkedin_oidc' is Supabase's name for Sign In with LinkedIn (OpenID Connect).
 export type Provider = 'google' | 'linkedin_oidc'
@@ -39,9 +40,8 @@ export function hasAcceptedTerms(user: User) {
   return Boolean(user.user_metadata?.terms_accepted_at)
 }
 
-export function isValidPhone(phone: string | null | undefined) {
-  return (phone ?? '').replace(/\D/g, '').length >= 7
-}
+// Phone checks live in phone.ts (they understand numbers from any country).
+export { isValidPhone }
 
 // A Google or LinkedIn account must have a profile, a phone number, and accepted the terms
 // before it can use the app. Email accounts already give these at signup.

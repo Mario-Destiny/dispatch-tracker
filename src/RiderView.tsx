@@ -13,6 +13,7 @@ import { tickTitle } from './businessUtils'
 import { hasPin, navLink } from './maps'
 import { showToast } from './toast'
 import { loadMyWorkAreas } from './areas'
+import { telHref } from './phone'
 
 type Delivery = {
   id: string
@@ -45,9 +46,7 @@ const statusLabel: Record<string, string> = {
 function customerTel(phone: string | null) {
   const digits = (phone || '').replace(/\D/g, '')
   if (digits.length < 7) return null
-  if (digits.startsWith('234')) return 'tel:+' + digits
-  if (digits.startsWith('0')) return 'tel:+234' + digits.slice(1)
-  return 'tel:+' + digits
+  return telHref(phone)
 }
 
 function RiderView() {

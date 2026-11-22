@@ -8,6 +8,7 @@ import ReportBox from './ReportBox'
 import Avatar from './Avatar'
 import { tickTitle } from './businessUtils'
 import { SITE_NAME } from './siteInfo'
+import { waDigits } from './phone'
 
 type PublicBusiness = {
   kind: 'vendor' | 'company'
@@ -30,10 +31,7 @@ type PublicBusiness = {
 }
 
 function formatPhone(phone: string) {
-  const digits = phone.replace(/\D/g, '')
-  if (digits.startsWith('234')) return digits
-  if (digits.startsWith('0')) return '234' + digits.slice(1)
-  return digits
+  return waDigits(phone)
 }
 
 function formatMinutes(minutes: number | null) {
