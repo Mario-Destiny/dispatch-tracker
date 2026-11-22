@@ -10,7 +10,7 @@ import WorkAreaPicker from './WorkAreaPicker'
 import { saveWorkAreas } from './areas'
 import SocialButtons from './SocialButtons'
 import PhoneField from './PhoneField'
-import { isValidPhone } from './phone'
+import { isValidPhone, phoneCountry } from './phone'
 import { insertProfile } from './profileSave'
 
 function RiderSignup() {
@@ -132,7 +132,7 @@ function RiderSignup() {
               />
             </div>
 
-            <WorkAreaPicker idPrefix="rider-areas" value={areas} onChange={setAreas} required />
+            <WorkAreaPicker idPrefix="rider-areas" value={areas} onChange={setAreas} required defaultCountry={phoneCountry(phone)} />
 
             <PasswordFields
               idPrefix="rider"
