@@ -40,9 +40,9 @@ function VendorMock() {
   ]
 
   const rows = [
-    { item: 'Red sneakers, size 42', route: 'Ikeja → Lekki', status: 'in_transit', code: 'DT-A83F2' },
-    { item: 'Phone case (2 pieces)', route: 'Yaba → Surulere', status: 'picked_up', code: 'DT-K29PW' },
-    { item: 'Birthday cake', route: 'Wuse → Garki', status: 'delivered', code: 'DT-M74XZ' },
+    { item: 'Red sneakers, size 42', route: 'Market Square → Riverside', status: 'in_transit', code: 'DT-A83F2' },
+    { item: 'Phone case (2 pieces)', route: 'Old Town → Hillside', status: 'picked_up', code: 'DT-K29PW' },
+    { item: 'Birthday cake', route: 'Central Station → Lakeside', status: 'delivered', code: 'DT-M74XZ' },
   ]
 
   return (
@@ -131,7 +131,7 @@ function RiderMock() {
 
       <div className="delivery-card edge-in_transit">
         <strong style={{ color: 'var(--text)' }}>Red sneakers, size 42</strong>
-        <p style={{ color: 'var(--text-secondary)' }}>Ikeja → Lekki</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Market Square → Riverside</p>
         <StatusBadge status="in_transit" />
 
         <div style={{ marginTop: 14 }}>
@@ -174,7 +174,7 @@ function TrackMock() {
 
       <div className="delivery-card edge-in_transit" style={{ padding: 18 }}>
         <h4 style={{ margin: '0 0 6px', color: 'var(--text)' }}>Red sneakers, size 42</h4>
-        <p style={{ color: 'var(--text-secondary)' }}>Ikeja → Lekki</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Market Square → Riverside</p>
         <p style={{ color: 'var(--text)' }}>
           <strong>Estimated arrival:</strong> Today, 4pm
         </p>

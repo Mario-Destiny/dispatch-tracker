@@ -93,7 +93,7 @@ function VendorSignup() {
                 id="vendor-name"
                 className="field-input"
                 autoComplete="name"
-                placeholder="e.g. Amaka Eze"
+                placeholder="Your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required

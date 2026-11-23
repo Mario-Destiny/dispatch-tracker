@@ -1,4 +1,7 @@
 import { CURRENCY } from './siteInfo'
+import { formatMoney } from './money'
+
+export { formatMoney }
 
 export type ReportDelivery = {
   created_at: string
@@ -29,15 +32,6 @@ export function countInMonth(items: { created_at: string }[], key: string) {
   return items.filter((i) => inMonth(i.created_at, key)).length
 }
 
-export function formatMoney(amount: number) {
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: CURRENCY,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(amount)
-}
-
 // Stops spreadsheet apps from treating text as a formula, while keeping phone numbers readable
 function safeText(text: string) {
   if (/^[=@]/.test(text)) return "'" + text
@@ -53,7 +47,8 @@ function csvCell(value: string | number | null | undefined) {
 export function downloadMonthlyCsv(
   month: string,
   rows: ReportDelivery[],
-  riderNames: Record<string, string>
+  riderNames: Record<string, string>,
+  currency: string = CURRENCY
 ) {
   const header = [
     'Date created',
@@ -66,7 +61,7 @@ export function downloadMonthlyCsv(
     'Customer phone',
     'Rider',
     'Status',
-    'Delivery fee (' + CURRENCY + ')',
+    'Delivery fee (' + currency + ')',
     'Completed at',
   ]
 

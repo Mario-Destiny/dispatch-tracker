@@ -211,17 +211,17 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
                 <input
                   id="biz-city"
                   className="field-input"
-                  placeholder="e.g. Ikeja"
+                  placeholder="Your city"
                   value={newCity}
                   onChange={(e) => setNewCity(e.target.value)}
                 />
               </div>
               <div className="field">
-                <label className="field-label" htmlFor="biz-state">State</label>
+                <label className="field-label" htmlFor="biz-state">State / region</label>
                 <input
                   id="biz-state"
                   className="field-input"
-                  placeholder="e.g. Lagos"
+                  placeholder="Your state or region"
                   value={newState}
                   onChange={(e) => setNewState(e.target.value)}
                 />

@@ -15,7 +15,8 @@ import PinField from './PinField'
 import { navLink, type Pin } from './maps'
 import Greeting from './Greeting'
 import { firstName } from './userName'
-import { CONTACT_EMAIL, CURRENCY, FREE_PLAN_MONTHLY_LIMIT } from './siteInfo'
+import { CONTACT_EMAIL, FREE_PLAN_MONTHLY_LIMIT } from './siteInfo'
+import { currencyOfCountry } from './money'
 import { monthKey, inMonth, countInMonth, formatMoney, downloadMonthlyCsv } from './report'
 import { showToast } from './toast'
 import PhoneField from './PhoneField'
@@ -181,6 +182,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const [pinTokens, setPinTokens] = useState<Record<string, string>>({})
   const [phone, setPhone] = useState('')
   const [myCountry, setMyCountry] = useState<string | null>(null)
+  const feeCurrency = currencyOfCountry(myCountry)
   const [eta, setEta] = useState('')
   const [fee, setFee] = useState('')
   const [selectedRiderId, setSelectedRiderId] = useState('')
@@ -789,8 +791,8 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
             />
           </div>
 
-          <LocationSelector key={'pickup-' + locationResetKey} label="Pickup Location" onChange={setPickup} />
-          <LocationSelector key={'dropoff-' + locationResetKey} label="Drop-off Location" onChange={setDropoff} />
+          <LocationSelector key={'pickup-' + locationResetKey + (myCountry ?? '')} label="Pickup Location" defaultCountry={myCountry} onChange={setPickup} />
+          <LocationSelector key={'dropoff-' + locationResetKey + (myCountry ?? '')} label="Drop-off Location" defaultCountry={myCountry} onChange={setDropoff} />
 
           <div className="field">
             <label className="field-label" htmlFor="landmark">Street or landmark (helps the rider find the customer)</label>
@@ -834,7 +836,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="delivery-fee">Delivery fee, {CURRENCY} (optional)</label>
+            <label className="field-label" htmlFor="delivery-fee">Delivery fee, {feeCurrency} (optional)</label>
             <input
               id="delivery-fee"
               className="field-input"
@@ -896,7 +898,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
             <button
               type="button"
               className="btn-primary"
-              onClick={() => downloadMonthlyCsv(activeMonth, reportRows, riderNames)}
+              onClick={() => downloadMonthlyCsv(activeMonth, reportRows, riderNames, feeCurrency)}
               disabled={loadingDeliveries || reportRows.length === 0}
             >
               Download CSV
@@ -923,11 +925,11 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                 <div className="report-label">Delivered</div>
               </div>
               <div className="report-stat">
-                <div className="report-value">{formatMoney(sumFees(reportDelivered))}</div>
+                <div className="report-value">{formatMoney(sumFees(reportDelivered), feeCurrency)}</div>
                 <div className="report-label">Fees on delivered</div>
               </div>
               <div className="report-stat">
-                <div className="report-value">{formatMoney(sumFees(reportRows))}</div>
+                <div className="report-value">{formatMoney(sumFees(reportRows), feeCurrency)}</div>
                 <div className="report-label">Fees on all deliveries</div>
               </div>
             </div>
@@ -942,7 +944,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                   <div key={client} className="client-row">
                     <span>{client}</span>
                     <strong>
-                      {t.count} {t.count === 1 ? 'delivery' : 'deliveries'} · {formatMoney(t.fees)}
+                      {t.count} {t.count === 1 ? 'delivery' : 'deliveries'} · {formatMoney(t.fees, feeCurrency)}
                     </strong>
                   </div>
                 ))}
@@ -1003,7 +1005,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
               <p style={{ color: 'var(--text)' }}>Status: <StatusBadge status={d.status} /></p>
               {d.estimated_delivery && <p style={{ color: 'var(--text-secondary)' }}>ETA: {d.estimated_delivery}</p>}
               {d.delivery_fee !== null && d.delivery_fee !== undefined && (
-                <p style={{ color: 'var(--text-secondary)' }}>Delivery fee: {formatMoney(Number(d.delivery_fee))}</p>
+                <p style={{ color: 'var(--text-secondary)' }}>Delivery fee: {formatMoney(Number(d.delivery_fee), feeCurrency)}</p>
               )}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8, flexWrap: 'wrap' }}>

@@ -4,10 +4,14 @@ import { Country, State, City } from 'country-state-city'
 type Props = {
   label: string
   onChange: (formattedLocation: string) => void
+  // Country selected at the start (a two-letter code like 'GH'). Blank if not given or not known.
+  defaultCountry?: string | null
 }
 
-function LocationSelector({ label, onChange }: Props) {
-  const [countryCode, setCountryCode] = useState('')
+function LocationSelector({ label, onChange, defaultCountry }: Props) {
+  const [countryCode, setCountryCode] = useState(() =>
+    defaultCountry && Country.getCountryByCode(defaultCountry) ? defaultCountry : ''
+  )
   const [stateCode, setStateCode] = useState('')
   const [cityName, setCityName] = useState('')
 

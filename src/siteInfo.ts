@@ -16,4 +16,4 @@ export const LAST_UPDATED = 'November 22, 2026'
 export const FREE_PLAN_MONTHLY_LIMIT = 0
 
 // Currency used for delivery fees.
-export const CURRENCY = 'NGN'
+export const CURRENCY = 'NGN' // default when a person's country (and so currency) is not known
