@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Country, State, City } from 'country-state-city'
 
+// The place chosen, in a form the app can compare with riders' work areas.
+export type Place = { iso: string; stateCode: string; stateName: string; city: string }
+
 type Props = {
   label: string
+  // Called with the structured place (null while no country is chosen), alongside onChange.
+  onPlaceChange?: (place: Place | null) => void
   onChange: (formattedLocation: string) => void
   // Country selected at the start (a two-letter code like 'GH'). Blank if not given or not known.
   defaultCountry?: string | null
 }
 
-function LocationSelector({ label, onChange, defaultCountry }: Props) {
+function LocationSelector({ label, onChange, onPlaceChange, defaultCountry }: Props) {
   const [countryCode, setCountryCode] = useState(() =>
     defaultCountry && Country.getCountryByCode(defaultCountry) ? defaultCountry : ''
   )
@@ -22,6 +27,7 @@ function LocationSelector({ label, onChange, defaultCountry }: Props) {
   useEffect(() => {
     if (!countryCode) {
       onChange('')
+      onPlaceChange?.(null)
       return
     }
 
@@ -30,6 +36,7 @@ function LocationSelector({ label, onChange, defaultCountry }: Props) {
 
     const parts = [cityName, state ? state.name : '', country ? country.name : ''].filter(Boolean)
     onChange(parts.join(', '))
+    onPlaceChange?.({ iso: countryCode, stateCode, stateName: state ? state.name : '', city: cityName })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countryCode, stateCode, cityName])
 

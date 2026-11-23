@@ -1673,3 +1673,11 @@ html {
   .phone-field { flex-direction: column; }
   .phone-field .phone-country { flex-basis: auto; max-width: none; }
 }
+
+/* Rider area labels on the vendor dashboard */
+.rider-area-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; }
+.rider-area-toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text); }
+.rider-area { font-size: 0.78rem; margin-top: 2px; color: var(--text-secondary); }
+.rider-area-exact { color: #16a34a; font-weight: 600; }
+.rider-area-region { color: #2563eb; font-weight: 600; }
+.rider-area-other { color: #d97706; }

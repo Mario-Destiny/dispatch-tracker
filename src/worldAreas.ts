@@ -57,6 +57,17 @@ function regionCode(code: string) {
   return slug(code, 20) || 'x'
 }
 
+// The key of a region from the country code and the data's region code ('GH', 'AA' -> 'world-gh-aa').
+// A country with no regions uses 'world-<iso>-all'.
+export function worldRegionKey(iso: string, stateCode: string) {
+  return WORLD_PREFIX + iso.toLowerCase() + '-' + (stateCode ? regionCode(stateCode) : 'all')
+}
+
+// The key of one city inside a region.
+export function worldCityKey(regionKey: string, city: string) {
+  return regionKey + ':' + slug(city, 60)
+}
+
 const regionCache = new Map<string, WorldRegion[]>()
 
 // The regions of a country. A country with no regions in the data becomes one region of its own.
