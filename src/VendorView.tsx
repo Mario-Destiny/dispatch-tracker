@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import LocationSelector from './LocationSelector'
+import type { Place } from './LocationSelector'
+import { fitLabel, fitOf, fitRank, placeLabel } from './riderAreas'
+import type { Fit } from './riderAreas'
+import { readWorkAreas } from './areas'
 import { useTheme } from './useTheme'
 import Avatar from './Avatar'
 import { useMyAvatar } from './useMyAvatar'
@@ -15,7 +19,8 @@ import PinField from './PinField'
 import { navLink, type Pin } from './maps'
 import Greeting from './Greeting'
 import { firstName } from './userName'
-import { CONTACT_EMAIL, CURRENCY, FREE_PLAN_MONTHLY_LIMIT } from './siteInfo'
+import { CONTACT_EMAIL, FREE_PLAN_MONTHLY_LIMIT } from './siteInfo'
+import { currencyOfCountry } from './money'
 import { monthKey, inMonth, countInMonth, formatMoney, downloadMonthlyCsv } from './report'
 import { showToast } from './toast'
 import PhoneField from './PhoneField'
@@ -52,6 +57,7 @@ type Rider = {
   phone: string | null
   is_available: boolean
   last_seen_at: string | null
+  work_areas?: string[] | null
 }
 
 type Company = {
@@ -174,6 +180,8 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const [clientName, setClientName] = useState('')
   const [itemName, setItemName] = useState('')
   const [pickup, setPickup] = useState('')
+  const [pickupPlace, setPickupPlace] = useState<Place | null>(null)
+  const [includeOtherAreas, setIncludeOtherAreas] = useState(false)
   const [dropoff, setDropoff] = useState('')
   const [landmark, setLandmark] = useState('')
     const [pickupPin, setPickupPin] = useState<Pin | null>(null)
@@ -181,6 +189,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const [pinTokens, setPinTokens] = useState<Record<string, string>>({})
   const [phone, setPhone] = useState('')
   const [myCountry, setMyCountry] = useState<string | null>(null)
+  const feeCurrency = currencyOfCountry(myCountry)
   const [eta, setEta] = useState('')
   const [fee, setFee] = useState('')
   const [selectedRiderId, setSelectedRiderId] = useState('')
@@ -241,13 +250,25 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   // Security rules decide which riders you may see:
   // vendors see independent riders, companies see only their own fleet.
   async function fetchRiders() {
-    const { data, error } = await supabase
+    const first = await supabase
       .from('profiles')
-      .select('id, name, phone, is_available, last_seen_at')
+      .select('id, name, phone, is_available, last_seen_at, work_areas')
       .eq('role', 'rider')
+    let data: Rider[] | null = first.data as Rider[] | null
+    let error = first.error
+
+    // If the work-areas column is not there yet, still show riders (without area labels).
+    if (error) {
+      const retry = await supabase
+        .from('profiles')
+        .select('id, name, phone, is_available, last_seen_at')
+        .eq('role', 'rider')
+      data = retry.data as Rider[] | null
+      error = retry.error
+    }
 
     if (error) console.error('Rider fetch error:', error)
-    else setRiders(data || [])
+    else setRiders((data || []).map((r) => ({ ...r, work_areas: readWorkAreas(r.work_areas) })))
     setLoadingRiders(false)
   }
 
@@ -370,6 +391,14 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
       return
     }
 
+    // A rider who works in a different area is allowed, but the vendor should know first.
+    if (!isCompany && pickupPlace && fitOf(chosenRider.work_areas, pickupPlace) === 'other') {
+      const ok = window.confirm(
+        chosenRider.name + " doesn't list " + placeLabel(pickupPlace) + " as a work area. Assign this rider anyway?"
+      )
+      if (!ok) return
+    }
+
     const feeValue = fee.trim() === '' ? null : Number(fee)
     if (feeValue !== null && (Number.isNaN(feeValue) || feeValue < 0)) {
       showToast('Please enter a valid delivery fee.', 'error')
@@ -486,13 +515,27 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
     { label: 'Avg. Delivery Time', value: avgTimeLabel, tone: 'stat-violet' },
   ]
 
-  const riderRows = riders
-    .map((r) => ({ rider: r, state: getRiderState(r) }))
+  // Riders are sorted by how well they fit the pickup area first, then online / away / offline.
+  const allRiderRows = riders
+    .map((r) => {
+      const fit: Fit = pickupPlace ? fitOf(r.work_areas, pickupPlace) : 'unset'
+      return { rider: r, state: getRiderState(r), fit }
+    })
     .sort(
       (a, b) =>
+        (pickupPlace ? fitRank[a.fit] - fitRank[b.fit] : 0) ||
         stateRank[a.state] - stateRank[b.state] ||
         (b.rider.last_seen_at ?? '').localeCompare(a.rider.last_seen_at ?? '')
     )
+
+  // Riders working elsewhere are hidden until the vendor asks for them, but only when at least one
+  // rider does cover the area, so the list is never empty because of this. Companies see their
+  // whole fleet.
+  const coverCount = allRiderRows.filter((x) => x.fit === 'exact' || x.fit === 'region').length
+  const hasOthers = allRiderRows.some((x) => x.fit === 'other')
+  const areaFiltering = !!pickupPlace && !isCompany && coverCount > 0 && !includeOtherAreas
+  const riderRows = areaFiltering ? allRiderRows.filter((x) => x.fit !== 'other') : allRiderRows
+  const noAreaMatch = !!pickupPlace && !isCompany && riders.length > 0 && coverCount === 0 && riders.some((r) => (r.work_areas?.length ?? 0) > 0)
 
   const counts: Record<RiderFilter, number> = {
     all: riderRows.length,
@@ -505,17 +548,23 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
   const selectedRider = riders.find((r) => r.id === selectedRiderId)
 
   // Suggest the best Online rider (Away riders only if nobody is Online)
-  const onlineRows = riderRows.filter((x) => x.state === 'online')
-  const suggestionPool = onlineRows.length > 0 ? onlineRows : riderRows.filter((x) => x.state === 'away')
-  const suggestedRider =
-    suggestionPool
-      .map((x) => ({ rider: x.rider, score: scoreRider(x.rider, deliveries) }))
-      .filter((x) => x.score > 0)
-      .sort(
-        (a, b) =>
-          b.score - a.score ||
-          (b.rider.last_seen_at ?? '').localeCompare(a.rider.last_seen_at ?? '')
-      )[0]?.rider ?? null
+  // Riders who cover the pickup area are preferred; others are used only if none of them can be suggested.
+  const bestOf = (rows: typeof riderRows) => {
+    const online = rows.filter((x) => x.state === 'online')
+    const pool = online.length > 0 ? online : rows.filter((x) => x.state === 'away')
+    return (
+      pool
+        .map((x) => ({ rider: x.rider, score: scoreRider(x.rider, deliveries) }))
+        .filter((x) => x.score > 0)
+        .sort(
+          (a, b) =>
+            b.score - a.score ||
+            (b.rider.last_seen_at ?? '').localeCompare(a.rider.last_seen_at ?? '')
+        )[0]?.rider ?? null
+    )
+  }
+  const inAreaRows = pickupPlace ? riderRows.filter((x) => x.fit === 'exact' || x.fit === 'region') : []
+  const suggestedRider = (pickupPlace && !isCompany ? bestOf(inAreaRows) : null) ?? bestOf(riderRows)
 
   // Plan usage (only matters when a free-plan limit is switched on in siteInfo.ts)
   const thisMonthKey = monthKey(new Date())
@@ -616,6 +665,26 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
         <h2 style={{ color: 'var(--text)' }}>{isCompany ? 'Your riders' : 'Choose a rider'}</h2>
 
         <div className="rider-panel">
+          {pickupPlace && !isCompany && !loadingRiders && riders.length > 0 && (
+            <div className="rider-area-bar">
+              <span>
+                📍 Pickup: <strong>{placeLabel(pickupPlace)}</strong>
+              </span>
+              {hasOthers && (
+                <label className="rider-area-toggle">
+                  <input
+                    type="checkbox"
+                    checked={includeOtherAreas}
+                    onChange={(e) => setIncludeOtherAreas(e.target.checked)}
+                  />
+                  Include other states
+                </label>
+              )}
+            </div>
+          )}
+          {noAreaMatch && !loadingRiders && (
+            <p className="rider-hint">No rider lists {placeLabel(pickupPlace!)} yet, so everyone is shown.</p>
+          )}
           <div className="rider-pills">
             {filters.map((f) => (
               <button
@@ -667,7 +736,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
             </p>
           ) : (
             <div className="rider-list">
-              {visibleRiders.map(({ rider: r, state }) => {
+              {visibleRiders.map(({ rider: r, state, fit }) => {
                 const digits = (r.phone || '').replace(/\D/g, '')
                 const canContact = digits.length >= 7
                 const intl = formatPhoneForWhatsApp(r.phone || '')
@@ -686,6 +755,9 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                         {suggestedRider?.id === r.id && <span className="rider-suggested">Suggested</span>}
                       </div>
                       <div className="rider-sub">{statusText(r, state)}</div>
+                      {pickupPlace ? (
+                        <div className={'rider-area rider-area-' + fit}>{fitLabel(fit, r.work_areas, pickupPlace)}</div>
+                      ) : null}
                     </div>
 
                     <span className={'rider-badge badge-' + state}>{stateLabel[state]}</span>
@@ -789,8 +861,8 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
             />
           </div>
 
-          <LocationSelector key={'pickup-' + locationResetKey} label="Pickup Location" onChange={setPickup} />
-          <LocationSelector key={'dropoff-' + locationResetKey} label="Drop-off Location" onChange={setDropoff} />
+          <LocationSelector key={'pickup-' + locationResetKey + (myCountry ?? '')} label="Pickup Location" defaultCountry={myCountry} onChange={setPickup} onPlaceChange={setPickupPlace} />
+          <LocationSelector key={'dropoff-' + locationResetKey + (myCountry ?? '')} label="Drop-off Location" defaultCountry={myCountry} onChange={setDropoff} />
 
           <div className="field">
             <label className="field-label" htmlFor="landmark">Street or landmark (helps the rider find the customer)</label>
@@ -834,7 +906,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="delivery-fee">Delivery fee, {CURRENCY} (optional)</label>
+            <label className="field-label" htmlFor="delivery-fee">Delivery fee, {feeCurrency} (optional)</label>
             <input
               id="delivery-fee"
               className="field-input"
@@ -896,7 +968,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
             <button
               type="button"
               className="btn-primary"
-              onClick={() => downloadMonthlyCsv(activeMonth, reportRows, riderNames)}
+              onClick={() => downloadMonthlyCsv(activeMonth, reportRows, riderNames, feeCurrency)}
               disabled={loadingDeliveries || reportRows.length === 0}
             >
               Download CSV
@@ -923,11 +995,11 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                 <div className="report-label">Delivered</div>
               </div>
               <div className="report-stat">
-                <div className="report-value">{formatMoney(sumFees(reportDelivered))}</div>
+                <div className="report-value">{formatMoney(sumFees(reportDelivered), feeCurrency)}</div>
                 <div className="report-label">Fees on delivered</div>
               </div>
               <div className="report-stat">
-                <div className="report-value">{formatMoney(sumFees(reportRows))}</div>
+                <div className="report-value">{formatMoney(sumFees(reportRows), feeCurrency)}</div>
                 <div className="report-label">Fees on all deliveries</div>
               </div>
             </div>
@@ -942,7 +1014,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
                   <div key={client} className="client-row">
                     <span>{client}</span>
                     <strong>
-                      {t.count} {t.count === 1 ? 'delivery' : 'deliveries'} · {formatMoney(t.fees)}
+                      {t.count} {t.count === 1 ? 'delivery' : 'deliveries'} · {formatMoney(t.fees, feeCurrency)}
                     </strong>
                   </div>
                 ))}
@@ -1003,7 +1075,7 @@ function VendorView({ mode = 'vendor' }: VendorViewProps) {
               <p style={{ color: 'var(--text)' }}>Status: <StatusBadge status={d.status} /></p>
               {d.estimated_delivery && <p style={{ color: 'var(--text-secondary)' }}>ETA: {d.estimated_delivery}</p>}
               {d.delivery_fee !== null && d.delivery_fee !== undefined && (
-                <p style={{ color: 'var(--text-secondary)' }}>Delivery fee: {formatMoney(Number(d.delivery_fee))}</p>
+                <p style={{ color: 'var(--text-secondary)' }}>Delivery fee: {formatMoney(Number(d.delivery_fee), feeCurrency)}</p>
               )}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8, flexWrap: 'wrap' }}>

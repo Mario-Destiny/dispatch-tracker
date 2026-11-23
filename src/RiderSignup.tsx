@@ -106,7 +106,7 @@ function RiderSignup() {
                 id="rider-name"
                 className="field-input"
                 autoComplete="name"
-                placeholder="e.g. Chinedu Okafor"
+                placeholder="Your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required

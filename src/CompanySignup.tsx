@@ -171,7 +171,7 @@ function CompanySignup() {
             <input
               id="co-city"
               className="field-input"
-              placeholder="e.g. Ikeja"
+              placeholder="Your city"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               required
@@ -179,11 +179,11 @@ function CompanySignup() {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-state">State</label>
+            <label className="field-label" htmlFor="co-state">State / region</label>
             <input
               id="co-state"
               className="field-input"
-              placeholder="e.g. Lagos"
+              placeholder="Your state or region"
               value={stateName}
               onChange={(e) => setStateName(e.target.value)}
               required
