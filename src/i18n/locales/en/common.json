@@ -1,0 +1,13 @@
+{
+  "language": { "label": "Language" },
+  "status": {
+    "pending": "Order Received",
+    "picked_up": "Picked Up",
+    "in_transit": "On The Way",
+    "delivered": "Delivered"
+  },
+  "tick": {
+    "identity": "Identity verified",
+    "business": "Business registration verified"
+  }
+}

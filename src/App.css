@@ -1681,3 +1681,6 @@ html {
 .rider-area-exact { color: #16a34a; font-weight: 600; }
 .rider-area-region { color: #2563eb; font-weight: 600; }
 .rider-area-other { color: #d97706; }
+
+/* Language picker */
+.lang-switch { background: var(--card-bg, transparent); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; cursor: pointer; }

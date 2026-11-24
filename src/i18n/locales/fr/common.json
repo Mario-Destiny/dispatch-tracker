@@ -1,0 +1,13 @@
+{
+  "language": { "label": "Langue" },
+  "status": {
+    "pending": "Commande reçue",
+    "picked_up": "Colis récupéré",
+    "in_transit": "En route",
+    "delivered": "Livré"
+  },
+  "tick": {
+    "identity": "Identité vérifiée",
+    "business": "Immatriculation de l'entreprise vérifiée"
+  }
+}

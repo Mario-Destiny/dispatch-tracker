@@ -1,5 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
+import './i18n'
 import { AppRoutes } from './App'
 
 // Used only at build time (see scripts/prerender.mjs) to save plain HTML for public pages.
