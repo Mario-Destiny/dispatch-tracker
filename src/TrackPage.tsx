@@ -1,10 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from './i18n/LanguageSwitcher'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import Skeleton from './Skeleton'
 import VerifiedTick from './VerifiedTick'
-import { tickTitle } from './businessUtils'
 import { showToast } from './toast'
 import type { LatLng } from './LiveMap'
 
@@ -28,14 +29,9 @@ type Delivery = {
   rated: boolean
 }
 
-const statusLabels: Record<string, string> = {
-  pending: 'Order Received',
-  picked_up: 'Picked Up',
-  in_transit: 'On The Way',
-  delivered: 'Delivered',
-}
-
 function TrackPage() {
+  const { t } = useTranslation('track')
+  const { t: tc } = useTranslation('common')
   const [searchParams] = useSearchParams()
   const [code, setCode] = useState(searchParams.get('code') || '')
   const [delivery, setDelivery] = useState<Delivery | null>(null)
@@ -104,7 +100,7 @@ function TrackPage() {
   async function submitRating() {
     if (!delivery) return
     if (stars < 1) {
-      showToast('Choose a star rating first.', 'error')
+      showToast(t('chooseStars'), 'error')
       return
     }
 
@@ -121,7 +117,7 @@ function TrackPage() {
       return
     }
 
-    showToast('Thanks for your rating!')
+    showToast(t('thanksToast'))
     setDelivery({ ...delivery, rated: true, can_rate: false })
   }
 
@@ -131,28 +127,31 @@ function TrackPage() {
   return (
     <div className="page-bg">
       <div style={{ maxWidth: 480, margin: '0 auto', fontFamily: 'sans-serif', padding: '60px 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+          <LanguageSwitcher />
+        </div>
         <h1 style={{ textAlign: 'center', lineHeight: 1.3, marginBottom: 8, color: 'var(--text)' }}>
-          Track Your Delivery
+          {t('title')}
         </h1>
         <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Enter the tracking code your vendor gave you
+          {t('subtitle')}
         </p>
 
         <form onSubmit={handleTrack} className="form-card" style={{ marginTop: 24 }}>
           <div className="field">
-            <label className="field-label" htmlFor="tracking-code">Tracking code</label>
+            <label className="field-label" htmlFor="tracking-code">{t('codeLabel')}</label>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <input
                 id="tracking-code"
                 className="field-input"
-                placeholder="e.g. DT-A83F2"
+                placeholder={t('codePlaceholder')}
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 style={{ flex: 1, minWidth: 180 }}
                 required
               />
               <button type="submit" className="btn-primary" disabled={loading}>
-                {loading ? <><Spinner size="sm" /> Searching...</> : 'Track'}
+                {loading ? <><Spinner size="sm" /> {t('searching')}</> : t('track')}
               </button>
             </div>
           </div>
@@ -176,9 +175,9 @@ function TrackPage() {
 
         {notFound && (
           <div className="delivery-card edge-error" style={{ marginTop: 28 }}>
-            <strong style={{ color: '#ef4444' }}>No delivery found</strong>
+            <strong style={{ color: '#ef4444' }}>{t('notFoundTitle')}</strong>
             <p style={{ color: 'var(--text-secondary)', margin: '6px 0 0' }}>
-              We couldn't find a delivery with that tracking code. Double-check it and try again.
+              {t('notFoundText')}
             </p>
           </div>
         )}
@@ -195,7 +194,7 @@ function TrackPage() {
 
             {delivery.business_name && (
               <p style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', color: 'var(--text)' }}>
-                Sent by{' '}
+                {t('sentBy')}{' '}
                 {delivery.business_slug ? (
                   <Link to={'/b/' + delivery.business_slug} style={{ color: 'var(--accent)', fontWeight: 600 }}>
                     {delivery.business_name}
@@ -204,14 +203,14 @@ function TrackPage() {
                   <strong>{delivery.business_name}</strong>
                 )}
                 {delivery.business_tick && (
-                  <VerifiedTick size={18} title={tickTitle(delivery.business_verification_type)} />
+                  <VerifiedTick size={18} title={tc(delivery.business_verification_type === 'identity' ? 'tick.identity' : 'tick.business')} />
                 )}
               </p>
             )}
 
             {delivery.estimated_delivery && (
               <p style={{ color: 'var(--text)' }}>
-                <strong>Estimated arrival:</strong> {delivery.estimated_delivery}
+                <strong>{t('estimatedArrival')}</strong> {delivery.estimated_delivery}
               </p>
             )}
 
@@ -230,7 +229,7 @@ function TrackPage() {
                     color: i <= currentStepIndex ? 'var(--text)' : 'var(--text-secondary)',
                     fontWeight: i === currentStepIndex ? 700 : 400,
                   }}>
-                    {statusLabels[step]}
+                    {tc('status.' + step)}
                   </span>
                 </div>
               ))}
@@ -246,8 +245,8 @@ function TrackPage() {
                 </Suspense>
                 <p className="live-note">
                   {live.rider_lat != null
-                    ? 'Blue dot: your rider. Red dot: your drop-off point. Updates every few seconds.'
-                    : 'Red dot: your drop-off point. Waiting for your rider to share their location.'}
+                    ? t('mapWithRider')
+                    : t('mapWaiting')}
                 </p>
               </div>
             )}
@@ -258,7 +257,7 @@ function TrackPage() {
                 background: 'var(--blue-bg)', border: '1px solid var(--blue-bar)', textAlign: 'center',
               }}>
                 <p style={{ margin: 0, fontSize: 14, color: 'var(--text-secondary)' }}>
-                  Your rider is on the way. Give them this code when your delivery arrives:
+                  {t('codeIntro')}
                 </p>
                 <p style={{
                   fontSize: 32, fontWeight: 800, letterSpacing: 6, margin: '10px 0 0', color: 'var(--blue-fg)',
@@ -270,16 +269,16 @@ function TrackPage() {
 
             {delivery.can_rate && (
               <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid var(--border)' }}>
-                <div className="field-label">How was your delivery?</div>
+                <div className="field-label">{t('rateTitle')}</div>
                 <p className="rider-hint" style={{ margin: '4px 0 0' }}>
-                  This rates the delivery experience.
+                  {t('rateHint')}
                 </p>
                 <div style={{ display: 'flex', gap: 4, margin: '8px 0 12px' }}>
                   {[1, 2, 3, 4, 5].map((n) => (
                     <button
                       key={n}
                       type="button"
-                      aria-label={n + (n === 1 ? ' star' : ' stars')}
+                      aria-label={t('star', { count: n })}
                       onClick={() => setStars(n)}
                       style={{
                         background: 'none', border: 'none', fontSize: 32, padding: '0 2px',
@@ -292,7 +291,7 @@ function TrackPage() {
                 </div>
                 <input
                   className="field-input"
-                  placeholder="Comment (only the business can see this)"
+                  placeholder={t('commentPlaceholder')}
                   maxLength={500}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
@@ -304,13 +303,13 @@ function TrackPage() {
                   onClick={submitRating}
                   disabled={rating}
                 >
-                  {rating ? <><Spinner size="sm" /> Sending...</> : 'Submit rating'}
+                  {rating ? <><Spinner size="sm" /> {t('sending')}</> : t('submitRating')}
                 </button>
               </div>
             )}
 
             {delivery.rated && (
-              <p className="rider-hint" style={{ marginTop: 18 }}>Thanks for rating this delivery.</p>
+              <p className="rider-hint" style={{ marginTop: 18 }}>{t('thanksRated')}</p>
             )}
           </div>
         )}
