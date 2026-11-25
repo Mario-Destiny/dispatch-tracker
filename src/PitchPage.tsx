@@ -69,7 +69,7 @@ function PitchPage() {
             check themselves — no app to download, no phone calls, no guessing.
           </p>
           <div className="lp-cta-row">
-            <Link to="/signup/vendor" className="lp-btn lp-btn-primary">Get started free</Link>
+            <Link to="/signup" className="lp-btn lp-btn-primary">Get started free</Link>
             <Link to="/login" className="lp-btn lp-btn-ghost">Log in</Link>
           </div>
           <p style={{ marginTop: 16, fontSize: 14 }}>
@@ -151,7 +151,7 @@ function PitchPage() {
               <strong>Free</strong>
               <p className="lp-price">₦0</p>
               <p>Create deliveries, assign riders, share tracking codes and follow every delivery.</p>
-              <Link to="/signup/vendor">Start free →</Link>
+              <Link to="/signup">Start free →</Link>
             </div>
             <div className="lp-who lp-featured">
               <strong>{PRICING.vendor.name}</strong>
@@ -186,7 +186,7 @@ function PitchPage() {
         <div style={{ textAlign: 'center', padding: '30px 20px 70px' }}>
           <h2 style={{ color: 'var(--text)' }}>Ready to stop chasing deliveries?</h2>
           <div className="lp-cta-row" style={{ marginTop: 16 }}>
-            <Link to="/signup/vendor" className="lp-btn lp-btn-primary">Get started free</Link>
+            <Link to="/signup" className="lp-btn lp-btn-primary">Get started free</Link>
             <Link to="/login" className="lp-btn lp-btn-ghost">Log in</Link>
           </div>
         </div>
