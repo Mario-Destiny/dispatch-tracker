@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 
-type Row = { id: string; reference: string; owner_id: string; plan: string; months: number; amount_kobo: number; status: string; note: string | null; created_at: string; paid_at: string | null }
+type Row = { id: string; reference: string; owner_id: string; plan: string; months: number; amount_kobo: number; currency?: string; status: string; note: string | null; created_at: string; paid_at: string | null }
 
 // Admin: recent Paystack payments.
 function AdminPayments() {
@@ -32,7 +32,7 @@ function AdminPayments() {
       {rows && rows.length === 0 && <p className="rider-hint">No payments yet.</p>}
       {rows?.map((r) => (
         <div key={r.id} className="admin-item">
-          <strong style={{ color: 'var(--text)' }}>₦{(r.amount_kobo / 100).toLocaleString('en-NG')}</strong>{' '}
+          <strong style={{ color: 'var(--text)' }}>{r.currency === 'USD' ? '$' : '₦'}{(r.amount_kobo / 100).toLocaleString('en-NG')}</strong>{' '}
           <span className="admin-meta">
             {names[r.owner_id] ?? r.owner_id.slice(0, 8)} · {r.plan} · {r.months} {r.months === 1 ? 'month' : 'months'} · {r.status.toUpperCase()}
           </span>

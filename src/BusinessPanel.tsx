@@ -4,7 +4,9 @@ import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import Skeleton from './Skeleton'
 import VerifiedTick from './VerifiedTick'
-import { PRICING } from './pricing'
+import { PRICING, USD_PRICING } from './pricing'
+import ReferralPanel from './ReferralPanel'
+import type { ReferralInfo } from './ReferralPanel'
 import PayPlan from './PayPlan'
 import { CONTACT_EMAIL } from './siteInfo'
 import { shortDate, tickTitle, type Badges } from './businessUtils'
@@ -82,6 +84,13 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
   const [applyMessage, setApplyMessage] = useState('')
   const [publicPhone, setPublicPhone] = useState('')
   const [savingPhone, setSavingPhone] = useState(false)
+  const [referral, setReferral] = useState<ReferralInfo | null>(null)
+
+  async function loadReferral() {
+    const { data, error } = await supabase.rpc('referral_summary')
+    if (error) console.error('Referral fetch error:', error)
+    setReferral((data as ReferralInfo | null) ?? null)
+  }
 
   async function load() {
     const { data, error } = await supabase.rpc('my_business')
@@ -92,6 +101,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
     setLoading(false)
 
     if (b) {
+      if (USD_PRICING) await loadReferral()
       const { data: r } = await supabase
         .from('delivery_ratings')
         .select('stars, comment, created_at')
@@ -254,7 +264,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
         {b.tick ? (
           <p className="rider-hint" style={{ marginBottom: 14 }}>
             <VerifiedTick size={16} title={tickTitle(b.verification_type)} /> You have the blue tick
-            {b.tick_source === 'founding' && biz.founding_until ? ' as a founding member until ' + shortDate(biz.founding_until) : ''}
+            {b.tick_source === 'founding' && biz.founding_until ? (USD_PRICING ? ' on your free period until ' : ' as a founding member until ') + shortDate(biz.founding_until) : ''}
             {b.tick_source === 'paid' && biz.paid_until ? ' with your Verified plan until ' + shortDate(biz.paid_until) : ''}
             {b.tick_source === 'earned' ? ' for your track record' : ''}.
           </p>
@@ -264,7 +274,7 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
           </p>
         ) : (
           <p className="rider-hint" style={{ marginBottom: 14 }}>
-            Earn the blue tick free by reaching the targets below, or get verified now with a Verified plan: {PRICING.vendor.price} a month for vendors, {PRICING.company.price} a month for companies.
+            Earn the blue tick free by reaching the targets below, or get verified now with a Verified plan: {PRICING.vendor.price} a month for vendors, {PRICING.company.price} a month for companies.{USD_PRICING ? ' Pay yearly and get 2 months free. Your first 30 days after verification are free.' : ''}
             We check your details first either way.
           </p>
         )}
@@ -353,12 +363,14 @@ function BusinessPanel({ isCompany }: BusinessPanelProps) {
           )}
         </div>
 
-        {!b.tick && (biz.verified || biz.requested_at) && <PayPlan kind={biz.kind} onPaid={load} />}
+        {!b.tick && (biz.verified || biz.requested_at) && <PayPlan kind={biz.kind} discount={referral?.discount} onPaid={load} />}
         {!b.tick && !biz.verified && !biz.requested_at && (
           <p className="rider-hint" style={{ marginTop: 10 }}>
             Apply for verification first. After you apply, you can pay for a Verified plan here.
           </p>
         )}
+
+        {referral && <ReferralPanel info={referral} onChange={loadReferral} />}
 
         <p className="rider-hint" style={{ marginTop: 14 }}>
           {b.top_rated

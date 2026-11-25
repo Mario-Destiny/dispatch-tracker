@@ -1,5 +1,6 @@
 import LegalPage from './LegalPage'
 import { SITE_NAME, COMPANY_NAME, CONTACT_EMAIL } from './siteInfo'
+import { USD_PRICING } from './pricing'
 
 function Privacy() {
   return (
@@ -28,6 +29,7 @@ function Privacy() {
         <li>Rider availability: whether you are marked available and when you were last active on the platform.</li>
         <li>Rider live location: while a delivery is in transit, a rider's phone shares its position. See section 4c.</li>
         <li>Payment records: if you buy a Verified plan, we keep the payment reference, plan, amount, status and time. Your card or bank details are handled by Paystack and never reach us.</li>
+        {USD_PRICING && <li>Referrals: your referral code, which business referred which, and when rewards were given.</li>}
         <li>On your device: your sign-in session and your light or dark theme choice.</li>
       </ul>
 

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
-import { PAYSTACK_PUBLIC_KEY, PLAN_MONTHS, planPriceNaira } from './pricing'
+import { PAYSTACK_PUBLIC_KEY, PLAN_MONTHS, planPriceNaira, planPriceCents, usd, USD_PRICING } from './pricing'
+import type { Period } from './pricing'
 
 type PaystackHandler = { openIframe: () => void }
 type PaystackPop = {
@@ -35,12 +36,15 @@ function loadPaystack(): Promise<PaystackPop> {
   })
 }
 
-type Created = { reference: string; amount_kobo: number; email: string }
+// The naira function returns amount_kobo; the USD function returns amount_minor (cents).
+type Created = { reference: string; amount_kobo?: number; amount_minor?: number; email: string }
 
-// Pay for 1, 3 or 6 months of a Verified plan. The price is decided by the database, and the plan
+// Pay for a Verified plan: monthly or yearly in USD, or 1, 3 or 6 months in naira while USD is off. The price is decided by the database, and the plan
 // is only switched on after Paystack's server tells our webhook the money arrived.
-function PayPlan({ kind, onPaid }: { kind: 'vendor' | 'company'; onPaid: () => void }) {
+function PayPlan({ kind, discount = false, onPaid }: { kind: 'vendor' | 'company'; discount?: boolean; onPaid: () => void }) {
   const [months, setMonths] = useState<number>(1)
+  const period: Period = months === 12 ? 'yearly' : 'monthly'
+  const options: readonly number[] = USD_PRICING ? [1, 12] : PLAN_MONTHS
   const [busy, setBusy] = useState(false)
   const [waiting, setWaiting] = useState(false)
 
@@ -64,7 +68,9 @@ function PayPlan({ kind, onPaid }: { kind: 'vendor' | 'company'; onPaid: () => v
 
   async function pay() {
     setBusy(true)
-    const { data, error } = await supabase.rpc('create_payment', { p_months: months })
+    const { data, error } = USD_PRICING
+      ? await supabase.rpc('create_usd_payment', { p_period: period })
+      : await supabase.rpc('create_payment', { p_months: months })
     if (error || !data) {
       showToast(error?.message || 'Could not start the payment.', 'error')
       setBusy(false)
@@ -81,8 +87,8 @@ function PayPlan({ kind, onPaid }: { kind: 'vendor' | 'company'; onPaid: () => v
       const handler = Pop.setup({
         key: PAYSTACK_PUBLIC_KEY,
         email: info.email,
-        amount: info.amount_kobo,
-        currency: 'NGN',
+        amount: (USD_PRICING ? info.amount_minor : info.amount_kobo) ?? 0,
+        currency: USD_PRICING ? 'USD' : 'NGN',
         ref: info.reference,
         callback: () => {
           setBusy(false)
@@ -97,11 +103,13 @@ function PayPlan({ kind, onPaid }: { kind: 'vendor' | 'company'; onPaid: () => v
     }
   }
 
-  const naira = planPriceNaira(kind, months)
+  const price = USD_PRICING
+    ? usd(planPriceCents(kind, period, discount))
+    : '₦' + planPriceNaira(kind, months).toLocaleString('en-NG')
   return (
     <div className="pay-plan">
       <div className="theme-choice" role="radiogroup" aria-label="Plan length" style={{ marginBottom: 10 }}>
-        {PLAN_MONTHS.map((m) => (
+        {options.map((m) => (
           <button
             key={m}
             type="button"
@@ -111,12 +119,12 @@ function PayPlan({ kind, onPaid }: { kind: 'vendor' | 'company'; onPaid: () => v
             onClick={() => setMonths(m)}
             disabled={busy || waiting}
           >
-            {m} {m === 1 ? 'month' : 'months'}
+            {USD_PRICING ? (m === 12 ? 'Yearly (2 months free)' : 'Monthly') : m + (m === 1 ? ' month' : ' months')}
           </button>
         ))}
       </div>
       <button type="button" className="btn-primary btn-sm" onClick={pay} disabled={busy || waiting}>
-        {waiting ? <><Spinner size="sm" /> Confirming payment...</> : busy ? <><Spinner size="sm" /> Opening...</> : 'Pay ₦' + naira.toLocaleString('en-NG') + ' with Paystack'}
+        {waiting ? <><Spinner size="sm" /> Confirming payment...</> : busy ? <><Spinner size="sm" /> Opening...</> : 'Pay ' + price + ' with Paystack'}
       </button>
       <p className="rider-hint" style={{ marginTop: 8 }}>
         Secure payment by Paystack. Your blue tick shows once your details have been checked and the payment is confirmed.
