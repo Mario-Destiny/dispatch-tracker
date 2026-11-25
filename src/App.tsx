@@ -24,6 +24,7 @@ import './App.css'
 import ToastContainer from './ToastContainer'
 import Privacy from './Privacy'
 import Terms from './Terms'
+import ChooseRole from './ChooseRole'
 import { CONTACT_EMAIL, COMPANY_NAME } from './siteInfo'
 
 function HeroIllustration() {
@@ -231,6 +232,7 @@ export function AppRoutes() {
                   <Route path="/vendor" element={<StatusGate><VendorView key="vendor" /></StatusGate>} />
                 <Route path="/company" element={<StatusGate><VendorView key="company" mode="company" /></StatusGate>} />
           <Route path="/rider" element={<StatusGate><RiderView /></StatusGate>} />
+  <Route path="/signup" element={<ChooseRole />} />
   <Route path="/signup/vendor" element={<VendorSignup />} />
   <Route path="/signup/rider" element={<RiderSignup />} />
           <Route path="/signup/company" element={<CompanySignup />} />

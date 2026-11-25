@@ -1684,3 +1684,20 @@ html {
 
 /* Language picker */
 .lang-switch { background: var(--card-bg, transparent); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; cursor: pointer; }
+
+/* Role chooser (/signup) */
+.role-pick-logo { display: flex; justify-content: center; margin-bottom: 28px; }
+.role-pick-logo a { text-decoration: none; }
+.role-pick { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.role-pick-card {
+  display: flex; align-items: center; gap: 16px; padding: 20px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  box-shadow: var(--card-shadow); text-decoration: none; text-align: left;
+}
+.role-pick-card:hover { border-color: var(--accent); }
+.role-pick-card:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+.role-pick-icon { font-size: 30px; line-height: 1; }
+.role-pick-text { display: flex; flex-direction: column; gap: 2px; flex: 1; color: var(--text-secondary); font-size: 14px; }
+.role-pick-text strong { font-size: 17px; color: var(--text); }
+.role-pick-text small { margin-top: 6px; font-size: 13px; line-height: 1.5; }
+.role-pick-arrow { color: var(--accent); font-size: 20px; font-weight: 600; }
