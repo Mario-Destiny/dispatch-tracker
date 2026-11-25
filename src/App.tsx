@@ -25,6 +25,7 @@ import ToastContainer from './ToastContainer'
 import Privacy from './Privacy'
 import Terms from './Terms'
 import ChooseRole from './ChooseRole'
+import { captureReferral } from './referral'
 import { CONTACT_EMAIL, COMPANY_NAME } from './siteInfo'
 
 function HeroIllustration() {
@@ -252,6 +253,9 @@ export function AppRoutes() {
     </>
   )
 }
+
+// Saved as the app starts, before any navigation drops the ?ref= part of the address.
+captureReferral()
 
 function App() {
   return (

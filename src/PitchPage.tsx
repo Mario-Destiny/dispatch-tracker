@@ -5,7 +5,7 @@ import AnimatedBackground from './AnimatedBackground'
 import AppShowcase from './AppShowcase'
 import DeliveryMapDemo from './DeliveryMapDemo'
 import { CONTACT_EMAIL, COMPANY_NAME } from './siteInfo'
-import { PRICING } from './pricing'
+import { PRICING, FREE_PRICE, USD_PRICING } from './pricing'
 
 function IconIllustration({ type }: { type: 'pin' | 'clock' | 'tag' }) {
   const common = { fill: 'none', stroke: 'var(--accent)', strokeWidth: 2.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
@@ -149,25 +149,30 @@ function PitchPage() {
           <div className="lp-steps">
             <div className="lp-who">
               <strong>Free</strong>
-              <p className="lp-price">₦0</p>
+              <p className="lp-price">{FREE_PRICE}</p>
               <p>Create deliveries, assign riders, share tracking codes and follow every delivery.</p>
               <Link to="/signup">Start free →</Link>
             </div>
             <div className="lp-who lp-featured">
               <strong>{PRICING.vendor.name}</strong>
               <p className="lp-price">{PRICING.vendor.price} <small>{PRICING.vendor.per}</small></p>
+              {USD_PRICING && <p>or {PRICING.vendor.yearly} a year (2 months free)</p>}
               <p>A blue tick on your public page so customers trust you. We check your details first.</p>
               <Link to="/signup/vendor">Sign up, then pay online →</Link>
             </div>
             <div className="lp-who">
               <strong>{PRICING.company.name}</strong>
               <p className="lp-price">{PRICING.company.price} <small>{PRICING.company.per}</small></p>
+              {USD_PRICING && <p>or {PRICING.company.yearly} a year (2 months free)</p>}
               <p>For dispatch companies with a fleet: the tick, plus your company page.</p>
               <Link to="/signup/company">Register, then pay online →</Link>
             </div>
           </div>
           <p className="lp-sub" style={{ marginTop: 20, marginBottom: 0, fontSize: 14 }}>
-            Early businesses get the first {PRICING.foundingMonths} months of verification free. You can also earn the tick for free by building a good delivery record.
+            {USD_PRICING
+              ? 'Your first 30 days after verification are free. Refer another business: they get 20% off their first monthly payment and you get 30 free days.'
+              : 'Early businesses get the first ' + PRICING.foundingMonths + ' months of verification free.'}{' '}
+            You can also earn the tick for free by building a good delivery record.
           </p>
         </div>
 

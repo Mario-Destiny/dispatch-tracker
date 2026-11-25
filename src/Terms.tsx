@@ -1,5 +1,6 @@
 import LegalPage from './LegalPage'
 import { SITE_NAME, COMPANY_NAME, CONTACT_EMAIL } from './siteInfo'
+import { USD_PRICING } from './pricing'
 
 function Terms() {
   return (
@@ -81,6 +82,13 @@ function Terms() {
         plans, are paid. The price and currency are shown before you pay, and payments are handled by
         Paystack. We will give notice before introducing any new charge.
       </p>
+      {USD_PRICING && (
+        <ul>
+          <li>Verified plans are priced in US dollars and paid monthly or yearly. Your bank may add its own conversion charges.</li>
+          <li>A business gets its first 30 days after verification free, once.</li>
+          <li>Referrals: a referred business gets 20% off its first monthly payment, not yearly payments. The referring business gets 30 free days after that first payment is confirmed, up to 6 times in 12 months. Rewards have no cash value. Self-referrals and abuse are not allowed, and we may withhold or remove rewards.</li>
+        </ul>
+      )}
 
       <h2>8. No guarantees</h2>
       <p>

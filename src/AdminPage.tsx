@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
+import { USD_PRICING } from './pricing'
 import Spinner from './Spinner'
 import { useTheme } from './useTheme'
 import { showToast } from './toast'
@@ -777,7 +778,7 @@ function VerificationTab() {
   }, [])
 
   function formFor(id: string): ReviewForm {
-    return forms[id] ?? { type: 'cac', note: '', founding: '3', paid: '0' }
+    return forms[id] ?? { type: 'cac', note: '', founding: USD_PRICING ? '0' : '3', paid: '0' }
   }
 
   function setForm(id: string, patch: Partial<ReviewForm>) {
@@ -838,7 +839,7 @@ function VerificationTab() {
                 </select>
               </div>
               <div className="field">
-                <label className="field-label">Founding months</label>
+                <label className="field-label">{USD_PRICING ? 'Extra free months (30 days are automatic)' : 'Founding months'}</label>
                 <input
                   className="field-input"
                   type="number"
