@@ -5,6 +5,8 @@ import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
 import { showToast } from './toast'
 import { dashboardFor, needsCompletion } from './authFlow'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 // The session can take a moment to appear after Google or LinkedIn sends the person back.
 async function waitForSession(): Promise<Session | null> {
@@ -17,6 +19,7 @@ async function waitForSession(): Promise<Session | null> {
 }
 
 function AuthCallback() {
+  useTranslation() // redraw when the language changes
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const hasRun = useRef(false)
@@ -31,7 +34,7 @@ function AuthCallback() {
       const hashParams = new URLSearchParams(window.location.hash.replace('#', ''))
       const oauthError = searchParams.get('error_description') || hashParams.get('error_description')
       if (oauthError) {
-        showToast('Sign-in failed: ' + oauthError, 'error')
+        showToast(tx('Sign-in failed:') + ' ' + oauthError, 'error')
         navigate('/login', { replace: true })
         return
       }
@@ -40,7 +43,7 @@ function AuthCallback() {
       const session = await waitForSession()
       const user = session?.user
       if (!user) {
-        showToast('Sign-in could not be completed. Please try again.', 'error')
+        showToast(tx("Sign-in could not be completed. Please try again."), 'error')
         navigate('/login', { replace: true })
         return
       }
@@ -60,7 +63,7 @@ function AuthCallback() {
         .maybeSingle()
 
       if (lookupError) {
-        showToast('Could not load your profile: ' + lookupError.message, 'error')
+        showToast(tx('Could not load your profile:') + ' ' + lookupError.message, 'error')
         navigate('/login', { replace: true })
         return
       }
@@ -84,7 +87,7 @@ function AuthCallback() {
     <div className="page-bg">
       <div style={{ textAlign: 'center', fontFamily: 'sans-serif', paddingTop: 40 }}>
         <Spinner />
-        <p style={{ color: 'var(--text-secondary)', marginTop: 16 }}>Signing you in...</p>
+        <p style={{ color: 'var(--text-secondary)', marginTop: 16 }}>{tx("Signing you in...")}</p>
       </div>
     </div>
   )

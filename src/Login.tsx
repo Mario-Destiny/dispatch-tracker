@@ -2,11 +2,15 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
+import LanguageSwitcher from './i18n/LanguageSwitcher'
 import { showToast } from './toast'
 import SocialButtons from './SocialButtons'
 import { CONTACT_EMAIL } from './siteInfo'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 function Login() {
+  useTranslation() // redraw when the language changes
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,8 +25,8 @@ function Login() {
     if (error) {
            showToast(
         error.message.toLowerCase().includes('banned')
-          ? 'This account is suspended. Please contact ' + CONTACT_EMAIL + '.'
-          : 'Login failed: ' + error.message,
+          ? tx('This account is suspended. Please contact {email}.', { email: CONTACT_EMAIL })
+          : tx('Login failed:') + ' ' + error.message,
         'error'
       )
       setLoading(false)
@@ -31,7 +35,7 @@ function Login() {
 
     const userId = data.user?.id
     if (!userId) {
-      showToast('Login succeeded but no user found.', 'error')
+      showToast(tx("Login succeeded but no user found."), 'error')
       setLoading(false)
       return
     }
@@ -54,7 +58,7 @@ function Login() {
     setLoading(false)
 
     if (profileError || !profile) {
-      showToast('Could not find your profile. Please contact support.', 'error')
+      showToast(tx("Could not find your profile. Please contact support."), 'error')
       return
     }
 
@@ -66,23 +70,24 @@ function Login() {
   return (
     <div className="page-bg">
       <div className="auth-wrap">
-        <h1 className="auth-title">Log In</h1>
-        <p className="auth-sub">Welcome back. Sign in to your dashboard.</p>
+        <div className="lang-row"><LanguageSwitcher /></div>
+        <h1 className="auth-title">{tx("Log In")}</h1>
+        <p className="auth-sub">{tx("Welcome back. Sign in to your dashboard.")}</p>
 
         <div className="form-card" style={{ marginBottom: 16 }}>
           <SocialButtons />
-          <div className="auth-divider">or log in with email</div>
+          <div className="auth-divider">{tx("or log in with email")}</div>
         </div>
 
         <form onSubmit={handleLogin} className="form-card">
           <div className="field">
-            <label className="field-label" htmlFor="login-email">Email</label>
+            <label className="field-label" htmlFor="login-email">{tx("Email")}</label>
             <input
               id="login-email"
               className="field-input"
               type="email"
               autoComplete="email"
-              placeholder="you@example.com"
+              placeholder={tx("you@example.com")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -90,13 +95,13 @@ function Login() {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="login-password">Password</label>
+            <label className="field-label" htmlFor="login-password">{tx("Password")}</label>
             <input
               id="login-password"
               className="field-input"
               type="password"
               autoComplete="current-password"
-              placeholder="Your password"
+              placeholder={tx("Your password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -104,15 +109,15 @@ function Login() {
           </div>
 
           <button type="submit" className="btn-primary btn-block" disabled={loading}>
-            {loading ? <><Spinner size="sm" /> Logging in...</> : 'Log In'}
+            {loading ? <><Spinner size="sm" /> {tx("Logging in...")}</> : tx("Log In")}
           </button>
         </form>
 
         <p style={{ marginTop: 20, textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Don't have an account? Sign up as a{' '}
-          <Link to="/signup/vendor" style={{ color: 'var(--accent)' }}>vendor</Link>,{' '}
-          <Link to="/signup/rider" style={{ color: 'var(--accent)' }}>rider</Link> or{' '}
-          <Link to="/signup/company" style={{ color: 'var(--accent)' }}>company</Link>.
+          {tx("Don't have an account? Sign up as a")}{' '}
+          <Link to="/signup/vendor" style={{ color: 'var(--accent)' }}>{tx('vendor')}</Link>,{' '}
+          <Link to="/signup/rider" style={{ color: 'var(--accent)' }}>{tx('rider')}</Link> {tx('or')}{' '}
+          <Link to="/signup/company" style={{ color: 'var(--accent)' }}>{tx('company')}</Link>.
         </p>
       </div>
     </div>

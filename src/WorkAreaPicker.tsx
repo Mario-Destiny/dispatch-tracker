@@ -10,6 +10,8 @@ import {
   stateName,
 } from './areas'
 import { WHOLE_REGION, worldCountries } from './worldAreas'
+import { useTranslation } from 'react-i18next'
+import { tx, localCountries } from './i18n/text'
 
 type Props = {
   idPrefix: string
@@ -32,6 +34,11 @@ const COUNTRIES = (() => {
   return nigeria ? [nigeria, ...all.filter((c) => c.iso !== 'NG')] : all
 })()
 
+// "All of <region>" comes from the area data; show it in the chosen language.
+function areaText(name: string) {
+  return name.replace(/^All of /, tx('All of') + ' ')
+}
+
 function knownCountry(iso: string | null | undefined): iso is string {
   return !!iso && COUNTRIES.some((c) => c.iso === iso)
 }
@@ -47,6 +54,7 @@ function WorkAreaPicker({
   required = false,
   defaultCountry,
 }: Props) {
+  useTranslation() // redraw when the language changes
   const [country, setCountry] = useState<string>(() =>
     value.length > 0 ? countryOfArea(value[0]) : knownCountry(defaultCountry) ? defaultCountry : 'NG'
   )
@@ -67,7 +75,7 @@ function WorkAreaPicker({
   const regions = regionsOfCountry(country)
   const browsing = regions.find((s) => s.key === stateKey) ?? null
   const stateBlocked = (key: string) => !chosenStates.includes(key) && chosenStates.length >= maxStates
-  const regionWord = country === 'NG' ? 'state' : 'region'
+  const chooseText = country === 'NG' ? tx('Choose a state to add areas') : tx('Choose a region to add areas')
 
   const q = query.trim().toLowerCase()
   const all = browsing ? areasOfRegion(browsing.key) : []
@@ -83,22 +91,21 @@ function WorkAreaPicker({
 
   return (
     <div className="field area-picker">
-      <span className="field-label" id={idPrefix + '-label'}>Where do you work?{required && <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}> (required)</span>}</span>
+      <span className="field-label" id={idPrefix + '-label'}>{tx('Where do you work?')}{required && <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}> {tx('(required)')}</span>}</span>
       <p className="area-note">
-        Pick the areas you can deliver in. Vendors in these areas will find you first. You can cover up to {maxAreas} areas
-        in up to {maxStates} states or regions.
+        {tx('Pick the areas you can deliver in. Vendors in these areas will find you first. You can cover up to {areas} areas in up to {regions} states or regions.', { areas: maxAreas, regions: maxStates })}
       </p>
 
       <div className="area-count" aria-live="polite">
-        {value.length} of {maxAreas} areas chosen
+        {tx('{count} of {max} areas chosen', { count: value.length, max: maxAreas })}
       </div>
 
       {value.length > 0 && (
-        <ul className="area-chips" aria-label="Your work areas">
+        <ul className="area-chips" aria-label={tx("Your work areas")}>
           {value.map((key) => (
             <li key={key} className="area-chip">
-              <span>{areaLabel(key)}</span>
-              <button type="button" onClick={() => toggle(key)} aria-label={'Remove ' + areaLabel(key)}>×</button>
+              <span>{areaText(areaLabel(key))}</span>
+              <button type="button" onClick={() => toggle(key)} aria-label={tx('Remove') + ' ' + areaText(areaLabel(key))}>×</button>
             </li>
           ))}
         </ul>
@@ -107,7 +114,7 @@ function WorkAreaPicker({
       <select
         id={idPrefix + '-country'}
         className="field-input"
-        aria-label="Country"
+        aria-label={tx("Country")}
         value={country}
         onChange={(e) => {
           picked.current = true
@@ -116,7 +123,7 @@ function WorkAreaPicker({
           setQuery('')
         }}
       >
-        {COUNTRIES.map((c) => (
+        {localCountries(COUNTRIES).map((c) => (
           <option key={c.iso} value={c.iso}>
             {c.flag} {c.name}
           </option>
@@ -133,18 +140,18 @@ function WorkAreaPicker({
           setQuery('')
         }}
       >
-        <option value="">{'Choose a ' + regionWord + ' to add areas'}</option>
+        <option value="">{chooseText}</option>
         {regions.map((s) => (
           <option key={s.key} value={s.key} disabled={stateBlocked(s.key)}>
             {s.name}
-            {stateBlocked(s.key) ? ' (limit reached)' : ''}
+            {stateBlocked(s.key) ? ' ' + tx('(limit reached)') : ''}
           </option>
         ))}
       </select>
 
       {chosenStates.length >= maxStates && (
         <p className="area-note">
-          You have chosen areas in {chosenStates.map(stateName).join(' and ')}. Remove all areas in one to switch to another.
+          {tx('You have chosen areas in {places}. Remove all areas in one to switch to another.', { places: chosenStates.map(stateName).join(' ' + tx('and (list)') + ' ') })}
         </p>
       )}
 
@@ -153,29 +160,29 @@ function WorkAreaPicker({
           <input
             className="field-input"
             type="search"
-            placeholder={'Search areas in ' + browsing.name}
+            placeholder={tx('Search areas in {place}', { place: browsing.name })}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            aria-label={'Search areas in ' + browsing.name}
+            aria-label={tx('Search areas in {place}', { place: browsing.name })}
           />
-          <div className="area-list" role="group" aria-label={'Areas in ' + browsing.name}>
-            {matches.length === 0 && !whole && <p className="area-note" style={{ padding: 12, margin: 0 }}>No area matches that search.</p>}
-            {matches.length === 0 && whole && q && <p className="area-note" style={{ padding: 12, margin: 0 }}>No area matches that search.</p>}
+          <div className="area-list" role="group" aria-label={tx('Areas in {place}', { place: browsing.name })}>
+            {matches.length === 0 && !whole && <p className="area-note" style={{ padding: 12, margin: 0 }}>{tx("No area matches that search.")}</p>}
+            {matches.length === 0 && whole && q && <p className="area-note" style={{ padding: 12, margin: 0 }}>{tx("No area matches that search.")}</p>}
             {rows.map((l) => {
               const checked = value.includes(l.key)
               const disabled = !checked && atMaxAreas
               return (
                 <label key={l.key} className={'area-row' + (checked ? ' on' : '') + (disabled ? ' off' : '')}>
                   <input type="checkbox" checked={checked} disabled={disabled} onChange={() => toggle(l.key)} />
-                  <span>{l.name}</span>
+                  <span>{areaText(l.name)}</span>
                 </label>
               )
             })}
           </div>
           {hiddenCount > 0 && (
-            <p className="area-note">Showing the first {MAX_ROWS}. Type in the search box to find the rest.</p>
+            <p className="area-note">{tx('Showing the first {max}. Type in the search box to find the rest.', { max: MAX_ROWS })}</p>
           )}
-          {atMaxAreas && <p className="area-note">You have reached {maxAreas} areas. Remove one to add another.</p>}
+          {atMaxAreas && <p className="area-note">{tx('You have reached {max} areas. Remove one to add another.', { max: maxAreas })}</p>}
         </>
       )}
     </div>

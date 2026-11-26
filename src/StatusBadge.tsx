@@ -1,3 +1,4 @@
+import { tx } from './i18n/text'
 type StatusConfig = {
   label: string
   bg: string
@@ -10,7 +11,8 @@ const STATUS_MAP: Record<string, StatusConfig> = {
   delivered: { label: 'Delivered', bg: '#16a34a' },
 }
 
-function StatusBadge({ status }: { status: string }) {
+// `translate` is set on translated pages; dashboards stay in English for now.
+function StatusBadge({ status, translate = false }: { status: string; translate?: boolean }) {
   const config = STATUS_MAP[status] || { label: status, bg: '#6b7280' }
 
   return (
@@ -24,7 +26,7 @@ function StatusBadge({ status }: { status: string }) {
       display: 'inline-block',
       letterSpacing: 0.3,
     }}>
-      {config.label}
+      {translate ? tx(config.label) : config.label}
     </span>
   )
 }

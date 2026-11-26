@@ -1,10 +1,13 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 // Route follows the road grid below: start -> up -> right -> up -> right -> destination.
 const ROUTE = 'M60 310 L60 230 L230 230 L230 120 L430 120 L430 70 L520 70'
 
 // A stylised illustration (not real data): a rider moving to a pinned drop-off point.
 function DeliveryMapDemo() {
+  useTranslation() // redraw when the language changes
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
@@ -22,13 +25,13 @@ function DeliveryMapDemo() {
   }, [])
 
   return (
-    <figure className="demo-map" aria-label="Illustration of a delivery on the way to a pinned drop-off">
+    <figure className="demo-map" aria-label={tx("Illustration of a delivery on the way to a pinned drop-off")}>
       <div className="demo-map-top">
-        <span className="demo-live"><i /> On the way</span>
-        <span className="demo-tag">Illustration</span>
+        <span className="demo-live"><i /> {tx("On the way")}</span>
+        <span className="demo-tag">{tx("Illustration")}</span>
       </div>
 
-      <svg ref={svgRef} viewBox="0 0 600 360" role="img" aria-label="Animated map: a rider travels along the streets to a blinking drop-off pin">
+      <svg ref={svgRef} viewBox="0 0 600 360" role="img" aria-label={tx("Animated map: a rider travels along the streets to a blinking drop-off pin")}>
         <rect className="dm-land" x="0" y="0" width="600" height="360" rx="14" />
         <path className="dm-water" d="M300 360 C 320 300, 270 270, 330 230 C 380 195, 360 160, 400 150 L 600 190 L 600 360 Z" />
         <g className="dm-block">
@@ -68,8 +71,7 @@ function DeliveryMapDemo() {
       </svg>
 
       <figcaption>
-        Every delivery has a pinned drop-off point and a status your customer can follow.
-        This map is an illustration.
+        {tx("Every delivery has a pinned drop-off point and a status your customer can follow. This map is an illustration.")}
       </figcaption>
     </figure>
   )
