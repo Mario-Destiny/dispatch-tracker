@@ -1,6 +1,7 @@
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './supabaseClient'
 import { isValidPhone } from './phone'
+import { tx } from './i18n/text'
 
 // 'linkedin_oidc' is Supabase's name for Sign In with LinkedIn (OpenID Connect).
 export type Provider = 'google' | 'linkedin_oidc'
@@ -25,9 +26,9 @@ export async function startOAuth(provider: Provider, role?: 'vendor' | 'rider'):
   if (!error) return null
   const msg = error.message.toLowerCase()
   if (msg.includes('not enabled') || msg.includes('unsupported provider')) {
-    return providerLabel[provider] + ' sign-in is not available yet. Please use email for now.'
+    return tx('{provider} sign-in is not available yet. Please use email for now.', { provider: providerLabel[provider] })
   }
-  return providerLabel[provider] + ' sign-in failed: ' + error.message
+  return tx('{provider} sign-in failed:', { provider: providerLabel[provider] }) + ' ' + error.message
 }
 
 // Accounts created through Google or LinkedIn (not email and password).

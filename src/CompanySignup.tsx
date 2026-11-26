@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
+import LanguageSwitcher from './i18n/LanguageSwitcher'
 import { showToast } from './toast'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
@@ -9,6 +10,8 @@ import { consentMetadata, recordConsent } from './consent'
 import PhoneField from './PhoneField'
 import { isValidPhone } from './phone'
 import { insertProfile } from './profileSave'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 const SIZE_OPTIONS = ['1–5 riders', '6–20 riders', '21–50 riders', '51+ riders']
 const TRACKING_OPTIONS = [
@@ -19,6 +22,7 @@ const TRACKING_OPTIONS = [
 ]
 
 function CompanySignup() {
+  useTranslation() // redraw when the language changes
   const navigate = useNavigate()
   const [companyName, setCompanyName] = useState('')
   const [contactName, setContactName] = useState('')
@@ -38,15 +42,15 @@ function CompanySignup() {
     e.preventDefault()
 
     if (!passwordsOk(password, confirm)) {
-      showToast('Passwords do not match.', 'error')
+      showToast(tx("Passwords do not match."), 'error')
       return
     }
     if (!isValidPhone(phone)) {
-      showToast('Enter a valid phone number.', 'error')
+      showToast(tx("Enter a valid phone number."), 'error')
       return
     }
     if (!agreed) {
-      showToast('Please agree to the Terms and Privacy Policy to continue.', 'error')
+      showToast(tx("Please agree to the Terms and Privacy Policy to continue."), 'error')
       return
     }
 
@@ -59,14 +63,14 @@ function CompanySignup() {
     })
 
     if (error) {
-      showToast('Signup failed: ' + error.message, 'error')
+      showToast(tx('Signup failed:') + ' ' + error.message, 'error')
       setLoading(false)
       return
     }
 
     const userId = data.user?.id
     if (!userId) {
-      showToast('Signup succeeded but no user ID returned.', 'error')
+      showToast(tx("Signup succeeded but no user ID returned."), 'error')
       setLoading(false)
       return
     }
@@ -79,7 +83,7 @@ function CompanySignup() {
     })
 
     if (profileError) {
-      showToast('Profile creation failed: ' + profileError.message, 'error')
+      showToast(tx('Profile creation failed:') + ' ' + profileError.message, 'error')
       setLoading(false)
       return
     }
@@ -96,30 +100,31 @@ function CompanySignup() {
     })
 
     if (companyError) {
-      showToast('Company setup failed: ' + companyError.message, 'error')
+      showToast(tx('Company setup failed:') + ' ' + companyError.message, 'error')
       setLoading(false)
       return
     }
 
-    showToast('Company created! Share your invite code with your riders.')
+    showToast(tx("Company created! Share your invite code with your riders."))
     navigate('/company')
   }
 
   return (
     <div className="page-bg">
       <div className="auth-wrap">
-        <h1 className="auth-title">Company Sign Up</h1>
+        <div className="lang-row"><LanguageSwitcher /></div>
+        <h1 className="auth-title">{tx("Company Sign Up")}</h1>
         <p className="auth-sub">
-          For dispatch and courier companies. Manage your own riders and track every delivery.
+          {tx("For dispatch and courier companies. Manage your own riders and track every delivery.")}
         </p>
 
         <form onSubmit={handleSignup} className="form-card">
           <div className="field">
-            <label className="field-label" htmlFor="co-name">Company name</label>
+            <label className="field-label" htmlFor="co-name">{tx("Company name")}</label>
             <input
               id="co-name"
               className="field-input"
-              placeholder="e.g. Swift Riders Logistics"
+              placeholder={tx("e.g. Swift Riders Logistics")}
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               required
@@ -127,12 +132,12 @@ function CompanySignup() {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-contact">Your full name</label>
+            <label className="field-label" htmlFor="co-contact">{tx("Your full name")}</label>
             <input
               id="co-contact"
               className="field-input"
               autoComplete="name"
-              placeholder="Contact person"
+              placeholder={tx("Contact person")}
               value={contactName}
               onChange={(e) => setContactName(e.target.value)}
               required
@@ -140,18 +145,18 @@ function CompanySignup() {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-phone">Phone</label>
+            <label className="field-label" htmlFor="co-phone">{tx("Phone")}</label>
             <PhoneField id="co-phone" value={phone} onChange={setPhone} required />
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-email">Email</label>
+            <label className="field-label" htmlFor="co-email">{tx("Email")}</label>
             <input
               id="co-email"
               className="field-input"
               type="email"
               autoComplete="email"
-              placeholder="you@company.com"
+              placeholder={tx("you@company.com")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -167,11 +172,11 @@ function CompanySignup() {
           />
 
           <div className="field">
-            <label className="field-label" htmlFor="co-city">City</label>
+            <label className="field-label" htmlFor="co-city">{tx("City")}</label>
             <input
               id="co-city"
               className="field-input"
-              placeholder="Your city"
+              placeholder={tx("Your city")}
               value={city}
               onChange={(e) => setCity(e.target.value)}
               required
@@ -179,11 +184,11 @@ function CompanySignup() {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-state">State / region</label>
+            <label className="field-label" htmlFor="co-state">{tx("State / region")}</label>
             <input
               id="co-state"
               className="field-input"
-              placeholder="Your state or region"
+              placeholder={tx("Your state or region")}
               value={stateName}
               onChange={(e) => setStateName(e.target.value)}
               required
@@ -191,7 +196,7 @@ function CompanySignup() {
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-size">How many riders do you have?</label>
+            <label className="field-label" htmlFor="co-size">{tx("How many riders do you have?")}</label>
             <select
               id="co-size"
               className="field-input"
@@ -199,35 +204,35 @@ function CompanySignup() {
               onChange={(e) => setSize(e.target.value)}
               required
             >
-              <option value="">Select</option>
+              <option value="">{tx("Select")}</option>
               {SIZE_OPTIONS.map((o) => (
-                <option key={o} value={o}>{o}</option>
+                <option key={o} value={o}>{tx(o)}</option>
               ))}
             </select>
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-rc">CAC / RC number (optional)</label>
+            <label className="field-label" htmlFor="co-rc">{tx("CAC / RC number (optional)")}</label>
             <input
               id="co-rc"
               className="field-input"
-              placeholder="e.g. RC1234567"
+              placeholder={tx("e.g. RC1234567")}
               value={rcNumber}
               onChange={(e) => setRcNumber(e.target.value)}
             />
           </div>
 
           <div className="field">
-            <label className="field-label" htmlFor="co-tracking">How do you track deliveries today? (optional)</label>
+            <label className="field-label" htmlFor="co-tracking">{tx("How do you track deliveries today? (optional)")}</label>
             <select
               id="co-tracking"
               className="field-input"
               value={tracking}
               onChange={(e) => setTracking(e.target.value)}
             >
-              <option value="">Select</option>
+              <option value="">{tx("Select")}</option>
               {TRACKING_OPTIONS.map((o) => (
-                <option key={o} value={o}>{o}</option>
+                <option key={o} value={o}>{tx(o)}</option>
               ))}
             </select>
           </div>
@@ -235,13 +240,13 @@ function CompanySignup() {
           <TermsCheckbox id="co-terms" checked={agreed} onChange={setAgreed} />
 
           <button type="submit" className="btn-primary btn-block" disabled={loading || !agreed || !passwordsOk(password, confirm)}>
-            {loading ? <><Spinner size="sm" /> Creating...</> : 'Create company account'}
+            {loading ? <><Spinner size="sm" /> {tx("Creating...")}</> : tx("Create company account")}
           </button>
         </form>
 
         <p style={{ marginTop: 20, textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: 'var(--accent)' }}>Log in</Link>
+          {tx("Already have an account?")}{' '}
+          <Link to="/login" style={{ color: 'var(--accent)' }}>{tx("Log in")}</Link>
         </p>
       </div>
     </div>

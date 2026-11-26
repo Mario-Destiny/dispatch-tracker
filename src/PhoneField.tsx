@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { parsePhoneNumberFromString, type CountryCode } from 'libphonenumber-js/min'
 import { COUNTRY_OPTIONS, DEFAULT_COUNTRY, countryForCallingCode, isCountryCode, parseStored } from './phone'
+import { useTranslation } from 'react-i18next'
+import { tx, localCountries } from './i18n/text'
 
 type Props = {
   id: string
@@ -26,6 +28,7 @@ function startingNational(value: string) {
 // A country picker plus the number. Whatever is typed is handed back in full international form,
 // so a number always works for WhatsApp and calls, in any country.
 function PhoneField({ id, value, onChange, defaultCountry, required = false }: Props) {
+  useTranslation() // redraw when the language changes
   const [country, setCountry] = useState<CountryCode>(() => startingCountry(value, defaultCountry))
   const [national, setNational] = useState(() => startingNational(value))
   const lastSent = useRef(value)
@@ -82,11 +85,11 @@ function PhoneField({ id, value, onChange, defaultCountry, required = false }: P
     <div className="phone-field">
       <select
         className="field-input phone-country"
-        aria-label="Country code"
+        aria-label={tx("Country code")}
         value={country}
         onChange={(e) => onCountryChange(e.target.value)}
       >
-        {COUNTRY_OPTIONS.map((c) => (
+        {localCountries(COUNTRY_OPTIONS).map((c) => (
           <option key={c.iso} value={c.iso}>
             {c.flag} {c.name} (+{c.dial})
           </option>
@@ -98,7 +101,7 @@ function PhoneField({ id, value, onChange, defaultCountry, required = false }: P
         type="tel"
         autoComplete="tel-national"
         inputMode="tel"
-        placeholder="Phone number"
+        placeholder={tx("Phone number")}
         value={national}
         onChange={(e) => onNumberChange(e.target.value)}
         required={required}

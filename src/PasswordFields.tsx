@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 type Props = {
   idPrefix: string
@@ -44,6 +46,7 @@ function EyeIcon({ open }: { open: boolean }) {
 
 // Password + confirm password with show/hide toggles, a strength hint and a live match message.
 function PasswordFields({ idPrefix, password, confirm, onPasswordChange, onConfirmChange }: Props) {
+  useTranslation() // redraw when the language changes
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const strength = strengthOf(password)
@@ -53,14 +56,14 @@ function PasswordFields({ idPrefix, password, confirm, onPasswordChange, onConfi
   return (
     <>
       <div className="field">
-        <label className="field-label" htmlFor={`${idPrefix}-password`}>Password</label>
+        <label className="field-label" htmlFor={`${idPrefix}-password`}>{tx("Password")}</label>
         <div className="password-wrap">
           <input
             id={`${idPrefix}-password`}
             className="field-input"
             type={showPassword ? 'text' : 'password'}
             autoComplete="new-password"
-            placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+            placeholder={tx('At least {count} characters', { count: MIN_PASSWORD_LENGTH })}
             value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
             required
@@ -70,7 +73,7 @@ function PasswordFields({ idPrefix, password, confirm, onPasswordChange, onConfi
             type="button"
             className="password-toggle"
             onClick={() => setShowPassword((v) => !v)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? tx("Hide password") : tx("Show password")}
             aria-pressed={showPassword}
           >
             <EyeIcon open={showPassword} />
@@ -83,20 +86,20 @@ function PasswordFields({ idPrefix, password, confirm, onPasswordChange, onConfi
                 <span key={n} className={n <= strength.score ? `strength-bar on s${strength.score}` : 'strength-bar'} />
               ))}
             </div>
-            <span className={`strength-label s${strength.score}`}>{strength.label}</span>
+            <span className={`strength-label s${strength.score}`}>{tx(strength.label)}</span>
           </div>
         )}
       </div>
 
       <div className="field">
-        <label className="field-label" htmlFor={`${idPrefix}-confirm`}>Confirm password</label>
+        <label className="field-label" htmlFor={`${idPrefix}-confirm`}>{tx("Confirm password")}</label>
         <div className="password-wrap">
           <input
             id={`${idPrefix}-confirm`}
             className="field-input"
             type={showConfirm ? 'text' : 'password'}
             autoComplete="new-password"
-            placeholder="Type your password again"
+            placeholder={tx("Type your password again")}
             value={confirm}
             onChange={(e) => onConfirmChange(e.target.value)}
             required
@@ -106,7 +109,7 @@ function PasswordFields({ idPrefix, password, confirm, onPasswordChange, onConfi
             type="button"
             className="password-toggle"
             onClick={() => setShowConfirm((v) => !v)}
-            aria-label={showConfirm ? 'Hide confirm password' : 'Show confirm password'}
+            aria-label={showConfirm ? tx("Hide confirm password") : tx("Show confirm password")}
             aria-pressed={showConfirm}
           >
             <EyeIcon open={showConfirm} />
@@ -114,7 +117,7 @@ function PasswordFields({ idPrefix, password, confirm, onPasswordChange, onConfi
         </div>
         {showMatch && (
           <span className={matches ? 'match-msg ok' : 'match-msg bad'} aria-live="polite">
-            {matches ? '✓ Passwords match' : '✕ Passwords do not match'}
+            {matches ? tx("✓ Passwords match") : tx("✕ Passwords do not match")}
           </span>
         )}
       </div>

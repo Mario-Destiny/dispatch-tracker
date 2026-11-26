@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import Spinner from './Spinner'
+import LanguageSwitcher from './i18n/LanguageSwitcher'
 import { showToast } from './toast'
 import PasswordFields, { passwordsOk } from './PasswordFields'
 import TermsCheckbox from './TermsCheckbox'
@@ -12,8 +13,11 @@ import SocialButtons from './SocialButtons'
 import PhoneField from './PhoneField'
 import { isValidPhone, phoneCountry } from './phone'
 import { insertProfile } from './profileSave'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 function RiderSignup() {
+  useTranslation() // redraw when the language changes
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -28,19 +32,19 @@ function RiderSignup() {
     e.preventDefault()
 
     if (!passwordsOk(password, confirm)) {
-      showToast('Passwords do not match.', 'error')
+      showToast(tx("Passwords do not match."), 'error')
       return
     }
     if (areas.length === 0) {
-      showToast('Choose at least one area where you work.', 'error')
+      showToast(tx("Choose at least one area where you work."), 'error')
       return
     }
     if (!isValidPhone(phone)) {
-      showToast('Enter a valid phone number.', 'error')
+      showToast(tx("Enter a valid phone number."), 'error')
       return
     }
     if (!agreed) {
-      showToast('Please agree to the Terms and Privacy Policy to continue.', 'error')
+      showToast(tx("Please agree to the Terms and Privacy Policy to continue."), 'error')
       return
     }
 
@@ -53,14 +57,14 @@ function RiderSignup() {
     })
 
     if (error) {
-      showToast('Signup failed: ' + error.message, 'error')
+      showToast(tx('Signup failed:') + ' ' + error.message, 'error')
       setLoading(false)
       return
     }
 
     const userId = data.user?.id
     if (!userId) {
-      showToast('Signup succeeded but no user ID returned.', 'error')
+      showToast(tx("Signup succeeded but no user ID returned."), 'error')
       setLoading(false)
       return
     }
@@ -73,7 +77,7 @@ function RiderSignup() {
     })
 
     if (profileError) {
-      showToast('Profile creation failed: ' + profileError.message, 'error')
+      showToast(tx('Profile creation failed:') + ' ' + profileError.message, 'error')
       setLoading(false)
       return
     }
@@ -82,7 +86,7 @@ function RiderSignup() {
 
     const areaError = await saveWorkAreas(areas)
     if (areaError) {
-      showToast('Your account is ready, but your work areas were not saved: ' + areaError + ' Add them in Settings.', 'error')
+      showToast(tx('Your account is ready, but your work areas were not saved: {error} Add them in Settings.', { error: areaError }), 'error')
     }
 
     navigate('/rider')
@@ -91,22 +95,23 @@ function RiderSignup() {
   return (
     <div className="page-bg">
       <div className="auth-wrap">
-        <h1 className="auth-title">Rider Sign Up</h1>
-        <p className="auth-sub">Create your account and start taking deliveries.</p>
+        <div className="lang-row"><LanguageSwitcher /></div>
+        <h1 className="auth-title">{tx("Rider Sign Up")}</h1>
+        <p className="auth-sub">{tx("Create your account and start taking deliveries.")}</p>
 
         <div className="form-card">
           <SocialButtons role="rider" />
 
-          <div className="auth-divider">or</div>
+          <div className="auth-divider">{tx("or")}</div>
 
           <form onSubmit={handleSignup} className="auth-form">
             <div className="field">
-              <label className="field-label" htmlFor="rider-name">Full name</label>
+              <label className="field-label" htmlFor="rider-name">{tx("Full name")}</label>
               <input
                 id="rider-name"
                 className="field-input"
                 autoComplete="name"
-                placeholder="Your full name"
+                placeholder={tx("Your full name")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -114,18 +119,18 @@ function RiderSignup() {
             </div>
 
             <div className="field">
-              <label className="field-label" htmlFor="rider-phone">Phone</label>
+              <label className="field-label" htmlFor="rider-phone">{tx("Phone")}</label>
               <PhoneField id="rider-phone" value={phone} onChange={setPhone} required />
             </div>
 
             <div className="field">
-              <label className="field-label" htmlFor="rider-email">Email</label>
+              <label className="field-label" htmlFor="rider-email">{tx("Email")}</label>
               <input
                 id="rider-email"
                 className="field-input"
                 type="email"
                 autoComplete="email"
-                placeholder="you@example.com"
+                placeholder={tx("you@example.com")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -145,15 +150,15 @@ function RiderSignup() {
             <TermsCheckbox id="rider-terms" checked={agreed} onChange={setAgreed} />
 
             <button type="submit" className="btn-primary btn-block" disabled={loading || !agreed || areas.length === 0 || !passwordsOk(password, confirm)}>
-              {loading ? <><Spinner size="sm" /> Signing up...</> : 'Sign Up'}
+              {loading ? <><Spinner size="sm" /> {tx("Signing up...")}</> : tx("Sign Up")}
             </button>
           </form>
         </div>
 
 
         <p style={{ marginTop: 20, textAlign: 'center', color: 'var(--text-secondary)' }}>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: 'var(--accent)' }}>Log in</Link>
+          {tx("Already have an account?")}{' '}
+          <Link to="/login" style={{ color: 'var(--accent)' }}>{tx("Log in")}</Link>
         </p>
       </div>
     </div>

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import StatusBadge from './StatusBadge'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 type TabKey = 'vendor' | 'riders' | 'rider' | 'track'
 
@@ -53,17 +55,17 @@ function VendorMock() {
             <div className="stat-values">
               <div className="stat-value">{s.value}</div>
             </div>
-            <div className="stat-label">{s.label}</div>
+            <div className="stat-label">{tx(s.label)}</div>
           </div>
         ))}
       </div>
 
       {rows.map((r) => (
         <div key={r.code} className={'delivery-card edge-' + r.status}>
-          <strong style={{ color: 'var(--text)' }}>{r.item}</strong>
+          <strong style={{ color: 'var(--text)' }}>{tx(r.item)}</strong>
           <p style={{ color: 'var(--text-secondary)' }}>{r.route}</p>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-            <StatusBadge status={r.status} />
+            <StatusBadge status={r.status} translate />
             <span style={{ fontFamily: 'monospace', fontWeight: 600, color: 'var(--text)' }}>{r.code}</span>
           </div>
         </div>
@@ -82,10 +84,10 @@ function RidersMock() {
   return (
     <>
       <div className="rider-pills">
-        <span className="rider-pill on">All 3</span>
-        <span className="rider-pill">Online 1</span>
-        <span className="rider-pill">Away 1</span>
-        <span className="rider-pill">Offline 1</span>
+        <span className="rider-pill on">{tx("All 3")}</span>
+        <span className="rider-pill">{tx("Online 1")}</span>
+        <span className="rider-pill">{tx("Away 1")}</span>
+        <span className="rider-pill">{tx("Offline 1")}</span>
       </div>
 
       <div className="rider-list">
@@ -97,16 +99,16 @@ function RidersMock() {
             </div>
             <div className="rider-info">
               <div className="rider-name">{r.name}</div>
-              <div className="rider-sub">{r.text}</div>
+              <div className="rider-sub">{tx(r.text)}</div>
             </div>
-            <span className={'rider-badge badge-' + r.state}>{r.label}</span>
+            <span className={'rider-badge badge-' + r.state}>{tx(r.label)}</span>
             <div className="rider-actions">
               <span className="rider-btn rider-btn-wa">WhatsApp</span>
-              <span className="rider-btn">Call</span>
+              <span className="rider-btn">{tx("Call")}</span>
               {r.state === 'offline' ? (
-                <span className="rider-muted">Can't assign</span>
+                <span className="rider-muted">{tx("Can't assign")}</span>
               ) : (
-                <span className="btn-primary btn-sm">Select</span>
+                <span className="btn-primary btn-sm">{tx("Select")}</span>
               )}
             </div>
           </div>
@@ -121,23 +123,23 @@ function RiderMock() {
     <>
       <div className="status-card stat-green">
         <div>
-          <strong style={{ color: 'var(--text)' }}>Status: 🟢 Available</strong>
+          <strong style={{ color: 'var(--text)' }}>{tx("Status: 🟢 Available")}</strong>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0 0' }}>
-            Vendors can currently assign you new deliveries.
+            {tx("Vendors can currently assign you new deliveries.")}
           </p>
         </div>
-        <span className="btn-primary btn-sm">Go Unavailable</span>
+        <span className="btn-primary btn-sm">{tx("Go Unavailable")}</span>
       </div>
 
       <div className="delivery-card edge-in_transit">
-        <strong style={{ color: 'var(--text)' }}>Red sneakers, size 42</strong>
+        <strong style={{ color: 'var(--text)' }}>{tx('Red sneakers, size 42')}</strong>
         <p style={{ color: 'var(--text-secondary)' }}>Market Square → Riverside</p>
-        <StatusBadge status="in_transit" />
+        <StatusBadge status="in_transit" translate />
 
         <div style={{ marginTop: 14 }}>
-          <div className="field-label">Customer confirmation code</div>
+          <div className="field-label">{tx("Customer confirmation code")}</div>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0 10px' }}>
-            Ask the customer for their 4-digit code to complete delivery.
+            {tx("Ask the customer for their 4-digit code to complete delivery.")}
           </p>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
             <div
@@ -146,7 +148,7 @@ function RiderMock() {
             >
               4821
             </div>
-            <span className="btn-primary btn-sm">Confirm Delivery</span>
+            <span className="btn-primary btn-sm">{tx("Confirm Delivery")}</span>
           </div>
         </div>
       </div>
@@ -162,21 +164,21 @@ function TrackMock() {
     <>
       <div className="form-card" style={{ marginBottom: 14 }}>
         <div className="field">
-          <div className="field-label">Tracking code</div>
+          <div className="field-label">{tx("Tracking code")}</div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <div className="field-input" style={{ flex: 1, minWidth: 160, display: 'flex', alignItems: 'center' }}>
               DT-A83F2
             </div>
-            <span className="btn-primary">Track</span>
+            <span className="btn-primary">{tx("Track")}</span>
           </div>
         </div>
       </div>
 
       <div className="delivery-card edge-in_transit" style={{ padding: 18 }}>
-        <h4 style={{ margin: '0 0 6px', color: 'var(--text)' }}>Red sneakers, size 42</h4>
+        <h4 style={{ margin: '0 0 6px', color: 'var(--text)' }}>{tx('Red sneakers, size 42')}</h4>
         <p style={{ color: 'var(--text-secondary)' }}>Market Square → Riverside</p>
         <p style={{ color: 'var(--text)' }}>
-          <strong>Estimated arrival:</strong> Today, 4pm
+          <strong>{tx("Estimated arrival:")}</strong> {tx("Today, 4pm")}
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
@@ -196,7 +198,7 @@ function TrackMock() {
                   fontWeight: i === current ? 700 : 400,
                 }}
               >
-                {label}
+                {tx(label)}
               </span>
             </div>
           ))}
@@ -209,7 +211,7 @@ function TrackMock() {
           }}
         >
           <p style={{ margin: 0, fontSize: 13, color: 'var(--text-secondary)' }}>
-            Your rider is on the way. Give them this code when your delivery arrives:
+            {tx("Your rider is on the way. Give them this code when your delivery arrives:")}
           </p>
           <p style={{ margin: '8px 0 0', fontSize: 28, fontWeight: 800, letterSpacing: 6, color: 'var(--blue-fg)' }}>
             4821
@@ -221,19 +223,19 @@ function TrackMock() {
 }
 
 function AppShowcase() {
+  useTranslation() // redraw when the language changes
   const [active, setActive] = useState<TabKey>('vendor')
   const current = TABS.find((t) => t.key === active) ?? TABS[0]
 
   return (
     <section className="mk-section" id="see-it-in-action">
-      <div className="mk-eyebrow">See it in action</div>
-      <h2 className="mk-title">Every delivery, one clear view</h2>
+      <div className="mk-eyebrow">{tx("See it in action")}</div>
+      <h2 className="mk-title">{tx("Every delivery, one clear view")}</h2>
       <p className="mk-sub">
-        A quick look at how vendors, riders and customers use Veritrack. Each screen below is
-        built from the real app.
+        {tx("A quick look at how vendors, riders and customers use Veritrack. Each screen below is built from the real app.")}
       </p>
 
-      <div className="mk-tabs" role="tablist" aria-label="App screens">
+      <div className="mk-tabs" role="tablist" aria-label={tx("App screens")}>
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -243,12 +245,12 @@ function AppShowcase() {
             className={'mk-tab' + (active === t.key ? ' on' : '')}
             onClick={() => setActive(t.key)}
           >
-            {t.label}
+            {tx(t.label)}
           </button>
         ))}
       </div>
 
-      <p className="mk-caption">{current.caption}</p>
+      <p className="mk-caption">{tx(current.caption)}</p>
 
       <div className="mk-frame">
         <div className="mk-bar">
@@ -265,13 +267,13 @@ function AppShowcase() {
         </div>
       </div>
 
-      <p className="mk-note">Sample data shown for illustration.</p>
+      <p className="mk-note">{tx("Sample data shown for illustration.")}</p>
 
       <div className="mk-cta">
-        <Link to="/signup/vendor" className="btn-primary">Sign up as a vendor</Link>
-        <Link to="/signup/rider" className="mk-ghost">Join as a rider</Link>
-        <Link to="/track" className="mk-ghost">Track an order</Link>
-                <Link to="/signup/company" className="mk-ghost">Sign up as a company</Link>
+        <Link to="/signup/vendor" className="btn-primary">{tx("Sign up as a vendor")}</Link>
+        <Link to="/signup/rider" className="mk-ghost">{tx("Join as a rider")}</Link>
+        <Link to="/track" className="mk-ghost">{tx("Track an order")}</Link>
+                <Link to="/signup/company" className="mk-ghost">{tx("Sign up as a company")}</Link>
       </div>
     </section>
   )

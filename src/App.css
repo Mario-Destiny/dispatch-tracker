@@ -1701,3 +1701,6 @@ html {
 .role-pick-text strong { font-size: 17px; color: var(--text); }
 .role-pick-text small { margin-top: 6px; font-size: 13px; line-height: 1.5; }
 .role-pick-arrow { color: var(--accent); font-size: 20px; font-weight: 600; }
+
+/* Language picker above the signup and login forms */
+.lang-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }

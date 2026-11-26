@@ -3,6 +3,8 @@ import { startOAuth } from './authFlow'
 import type { Provider } from './authFlow'
 import Spinner from './Spinner'
 import { showToast } from './toast'
+import { useTranslation } from 'react-i18next'
+import { tx } from './i18n/text'
 
 function GoogleMark() {
   return (
@@ -25,6 +27,7 @@ function LinkedInMark() {
 
 // Google and LinkedIn buttons used on the login and signup pages.
 function SocialButtons({ role }: { role?: 'vendor' | 'rider' }) {
+  useTranslation() // redraw when the language changes
   const [busy, setBusy] = useState<Provider | null>(null)
 
   async function go(provider: Provider) {
@@ -39,10 +42,10 @@ function SocialButtons({ role }: { role?: 'vendor' | 'rider' }) {
   return (
     <div className="social-buttons">
       <button type="button" className="btn-google" onClick={() => go('google')} disabled={busy !== null}>
-        {busy === 'google' ? <><Spinner size="sm" /> Redirecting...</> : <><GoogleMark /> Continue with Google</>}
+        {busy === 'google' ? <><Spinner size="sm" /> {tx("Redirecting...")}</> : <><GoogleMark /> {tx('Continue with Google')}</>}
       </button>
       <button type="button" className="btn-linkedin" onClick={() => go('linkedin_oidc')} disabled={busy !== null}>
-        {busy === 'linkedin_oidc' ? <><Spinner size="sm" /> Redirecting...</> : <><LinkedInMark /> Continue with LinkedIn</>}
+        {busy === 'linkedin_oidc' ? <><Spinner size="sm" /> {tx("Redirecting...")}</> : <><LinkedInMark /> {tx('Continue with LinkedIn')}</>}
       </button>
     </div>
   )
